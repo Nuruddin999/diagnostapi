@@ -1,0 +1,39 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "bluebird": "^3.7.1",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.11.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.6.8",
+    "mongoose": "^5.12.11",
+    "mysql2": "^2.3.3",
+    "nodemailer": "^6.6.1",
+    "pg": "^8.6.0",
+    "sequelize": "^6.6.5",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.12",
+    "@types/node": "^14.0.5",
+    "inquirer": "^1.1.2",
+    "nodemon": "^2.0.12",
+    "sequelize-cli": "^6.4.1",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "tslint": "^6.1.2",
+    "typescript": "^3.9.3"
+  }
+}
