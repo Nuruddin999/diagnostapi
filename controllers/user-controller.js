@@ -67,9 +67,17 @@ class UserController {
     }
     async checkUser(req, res, next) {
         try {
-            return res.json({ok:true});
+            return res.json({ ok: true });
         } catch (e) {
             next(e);
+        }
+    }
+    async checkIsSuperAdmin(req, res, next) {
+        try {
+            const superAdmin = await userService.checkIsSuperAdmin();
+            return res.json({ superAdmin: true });
+        } catch (e) {
+            return res.json({ superAdmin: false });
         }
     }
 }

@@ -55,7 +55,7 @@ class UserService {
     }
 
     async refresh(refreshToken) {
-        console.log('back refsreshtoken',refreshToken)
+        console.log('back refsreshtoken', refreshToken)
         if (!refreshToken) {
             throw ApiError.UnauthorizedError();
         }
@@ -67,7 +67,7 @@ class UserService {
         if (!userData || !tokenFromDb) {
             throw ApiError.UnauthorizedError();
         }
-        const user = await User.findOne({ where: { id:userData.id } });
+        const user = await User.findOne({ where: { id: userData.id } });
         const { email: userEmail, name, speciality, phone, role } = user
         const userDto = new UserDto({ email: user.email, id: user.id, isActivated: true });
         const tokens = tokenService.generateTokens({ ...userDto });
@@ -78,6 +78,10 @@ class UserService {
     async getAllUsers() {
         const users = await User.find();
         return users;
+    }
+    async checkIsSuperAdmin() {
+        const user = await User.findOne({ where: { role: 'superadmin' } });
+        return user.role
     }
 }
 

@@ -16,10 +16,11 @@ router.get('/activate/:link', userController.activate);
 router.post('/refresh', userController.refresh);
 router.get('/users', authMiddleware, userController.getUsers);
 router.get('/uscheck', authMiddleware, userController.checkUser);
-router.post('/application',authMiddleware,applicationController.create);
-router.get('/applications',authMiddleware, applicationController.getAll);
-router.get('/applications/:id',authMiddleware, applicationController.getOne);
+router.get('/superadmn', userController.checkIsSuperAdmin);
+router.post('/application', authMiddleware, applicationController.create);
+router.get('/applications', authMiddleware, applicationController.getAll);
+router.get('/applications/:id', authMiddleware, applicationController.getOne);
 router.get('/appls/', authMiddleware, applicationController.getByLetter);
-router.post('/updappl/',authMiddleware,applicationController.updateappl);
-router.get('/applicationdel/:id',authMiddleware, applicationController.deleteApplication)
+router.post('/updappl/', authMiddleware, applicationController.updateappl);
+router.get('/applicationdel/:id', authMiddleware, applicationController.deleteApplication)
 module.exports = router
