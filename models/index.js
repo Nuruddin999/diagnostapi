@@ -10,7 +10,7 @@ const db = {};
 
 let sequelize;
 
-sequelize = new Sequelize(process.env.PG_DATABASE, process.env.PG_USERNAME, process.env.PG_PASSWORD, { host: process.env.PG_HOST, dialect:"postgres"});
+sequelize = new Sequelize("database_diagnost", 'postgres', "fillpostgress999", { host: process.env.PG_HOST, dialect:"postgres"});
 
 
 fs
