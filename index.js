@@ -18,9 +18,6 @@ app.use(cors({
 }));
 app.use(express.static(root))
 app.use('/api', router);
-app.use('/*',(req,res)=>{
-    res.sendFile(path.join(__dirname, 'build', 'index.html'))
-})
 app.use(errorMiddleware);
 
 const start = async () => {
