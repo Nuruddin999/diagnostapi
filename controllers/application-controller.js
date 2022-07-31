@@ -36,8 +36,17 @@ class ApplicationController {
   }
   async getByLetter(req, res, next) {
     try {
-      const { text, field } = req.query;
-      const applicationsData = await Application.findAndCountAll({ where: { [field]: { [Op.like]: `%${text}%` } }, limit: 4, offset: 0 });
+      const { fundName, fundRequest, manager, patientName, patientRequest, limit, page } = req.query;
+      const offset = page * limit - limit
+      const applicationsData = await Application.findAndCountAll({
+        where: {
+          manager: { [Op.like]: `%${manager}%` },
+          fundRequest: { [Op.like]: `%${fundRequest}%` },
+          fundName: { [Op.like]: `%${fundName}%` },
+          patientName: { [Op.like]: `%${patientName}%` },
+          patientRequest: { [Op.like]: `%${patientRequest}%` },
+        }, limit, offset
+      });
       return res.json(applicationsData);
     } catch (e) {
       next(e);
