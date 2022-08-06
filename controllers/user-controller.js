@@ -80,6 +80,16 @@ class UserController {
             return res.json({ superAdmin: false });
         }
     }
+
+    async changeIsDeleted(req, res, next) {
+        try {
+            const { email } = req.body;
+            const userData = await userService.changeIsDeleted(email);
+            return res.json(userData);
+        } catch (e) {
+            next(e);
+        }
+    }
 }
 
 

@@ -17,6 +17,7 @@ router.post('/refresh', userController.refresh);
 router.get('/users', authMiddleware, userController.getUsers);
 router.get('/uscheck', authMiddleware, userController.checkUser);
 router.get('/superadmn', userController.checkIsSuperAdmin);
+router.post('/changedel',authMiddleware, userController.changeIsDeleted);
 router.post('/application', authMiddleware, applicationController.create);
 router.get('/applications', authMiddleware, applicationController.getAll);
 router.get('/applications/:id', authMiddleware, applicationController.getOne);

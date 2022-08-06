@@ -42,11 +42,11 @@ class UserService {
         if (!isPassEquals) {
             throw ApiError.BadRequest('Неверный пароль');
         }
-        const { email: userEmail, name, speciality, phone, role } = user
+        const { email: userEmail, name, speciality, phone, role, isDeletedPlace } = user
         const userDto = new UserDto({ email: user.email, id: user.id, isActivated: true });
         const tokens = tokenService.generateTokens({ ...userDto });
         await tokenService.saveToken(user, tokens.refreshToken);
-        return { ...tokens, user: { email: userEmail, name, speciality, phone, role } }
+        return { ...tokens, user: { email: userEmail, name, speciality, phone, role, isDeletedPlace } }
     }
 
     async logout(refreshToken) {
@@ -55,24 +55,20 @@ class UserService {
     }
 
     async refresh(refreshToken) {
-        console.log('back refsreshtoken', refreshToken)
         if (!refreshToken) {
             throw ApiError.UnauthorizedError();
         }
         const userData = tokenService.validateRefreshToken(refreshToken);
         const tokenFromDb = await Token.findOne({ where: { refreshToken } });
-        console.log('userData', userData)
-        console.log('tokenFromDb', tokenFromDb)
-
         if (!userData || !tokenFromDb) {
             throw ApiError.UnauthorizedError();
         }
         const user = await User.findOne({ where: { id: userData.id } });
-        const { email: userEmail, name, speciality, phone, role } = user
+        const { email: userEmail, name, speciality, phone, role, isDeletedPlace } = user
         const userDto = new UserDto({ email: user.email, id: user.id, isActivated: true });
         const tokens = tokenService.generateTokens({ ...userDto });
         await tokenService.saveToken(user, tokens.refreshToken);
-        return { ...tokens, user: { email: userEmail, name, speciality, phone, role } }
+        return { ...tokens, user: { email: userEmail, name, speciality, phone, role, isDeletedPlace } }
     }
 
     async getAllUsers() {
@@ -82,6 +78,12 @@ class UserService {
     async checkIsSuperAdmin() {
         const user = await User.findOne({ where: { role: 'superadmin' } });
         return user.role
+    }
+    async changeIsDeleted(email) {
+        const user = await User.findOne({ where: { email } })
+        const { email: userEmail, name, speciality, phone, role, isDeletedPlace } = user
+        await user.update({isDeletedPlace: !isDeletedPlace})
+        return { user: { email: userEmail, name, speciality, phone, role, isDeletedPlace: user.isDeletedPlace } }
     }
 }
 
