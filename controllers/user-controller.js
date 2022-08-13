@@ -1,6 +1,7 @@
 const userService = require('../service/user-service');
 const { validationResult } = require('express-validator');
 const ApiError = require('../exceptions/api-error');
+const user = require('../models/user');
 
 class UserController {
     async registration(req, res, next) {
@@ -94,6 +95,14 @@ class UserController {
             const { email } = req.body;
             const userData = await userService.changeIsDeleted(email);
             return res.json(userData);
+        } catch (e) {
+            next(e);
+        }
+    }
+    async getOne(req, res, next) {
+        try {
+            const userData = await userService.getOne(req, res, next);
+            return userData
         } catch (e) {
             next(e);
         }
