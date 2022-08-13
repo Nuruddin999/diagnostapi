@@ -16,6 +16,7 @@ router.get('/activate/:link', userController.activate);
 router.post('/refresh', userController.refresh);
 router.get('/users', authMiddleware, userController.getUsers);
 router.get('/uscheck', authMiddleware, userController.checkUser);
+router.get('/userdel/:id', authMiddleware, userController.deleteUser)
 router.get('/superadmn', userController.checkIsSuperAdmin);
 router.post('/changedel',authMiddleware, userController.changeIsDeleted);
 router.post('/application', authMiddleware, applicationController.create);

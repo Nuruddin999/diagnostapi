@@ -86,15 +86,7 @@ class ApplicationController {
   async deleteApplication(req, res, next) {
     try {
       const { id } = req.params;
-      // const applicationsData = await Application.findOne({ where: { id } });
       await Application.destroy({ where: { id } })
-      // if (consiliumDoctors.length > 0) {
-      //   await ConsiliumDoctor.destroy({ where: { applicationId } });
-      //   consiliumDoctors.forEach(async (cDoctor) => {
-      //     const result = await ConsiliumDoctor.create({ ...cDoctor })
-      //     await result.setApplication(applicationsData)
-      //   })
-      // }
       return res.json({ deleted: 'ok' });
     } catch (e) {
       next(e);

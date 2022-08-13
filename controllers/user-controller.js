@@ -59,8 +59,16 @@ class UserController {
 
     async getUsers(req, res, next) {
         try {
-            const users = await userService.getAllUsers();
-            return res.json(users);
+            const users = await userService.getByLetter(req, res, next);
+            return users;
+        } catch (e) {
+            next(e);
+        }
+    }
+    async deleteUser(req, res, next) {
+        try {
+            const user = await userService.deleteUser(req, res, next);
+            return user;
         } catch (e) {
             next(e);
         }
@@ -74,7 +82,7 @@ class UserController {
     }
     async checkIsSuperAdmin(req, res, next) {
         try {
-            const superAdmin = await userService.checkIsSuperAdmin();
+            await userService.checkIsSuperAdmin();
             return res.json({ superAdmin: true });
         } catch (e) {
             return res.json({ superAdmin: false });

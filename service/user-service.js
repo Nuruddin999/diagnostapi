@@ -5,7 +5,7 @@ const mailService = require('./mail-service');
 const tokenService = require('./token-service');
 const UserDto = require('../dtos/user-dto');
 const ApiError = require('../exceptions/api-error');
-
+const { Op } = require('sequelize');
 class UserService {
     async registration(body) {
         console.log(JSON.stringify(body))
@@ -71,9 +71,34 @@ class UserService {
         return { ...tokens, user: { email: userEmail, name, speciality, phone, role, isDeletedPlace } }
     }
 
-    async getAllUsers() {
-        const users = await User.find();
-        return users;
+    async getAllUsers(req, res, next) {
+        try {
+            const { page, limit } = req.query;
+            const offset = page * limit - limit
+            const users = await User.findAndCountAll({
+                limit, offset
+            });
+            return res.json(users);
+        } catch (e) {
+            next(e);
+        }
+    }
+    async getByLetter(req, res, next) {
+        try {
+            const { page,limit, email, name, speciality, phone } = req.query;
+            const offset = page * limit - limit
+            const userdata = await User.findAndCountAll({
+                where: {
+                    email: { [Op.like]: `%${email}%` },
+                    name: { [Op.like]: `%${name}%` },
+                    speciality: { [Op.like]: `%${speciality}%` },
+                    phone: { [Op.like]: `%${phone}%` },
+                }, limit, offset
+            });
+            return res.json(userdata);
+        } catch (e) {
+            next(e);
+        }
     }
     async checkIsSuperAdmin() {
         const user = await User.findOne({ where: { role: 'superadmin' } });
@@ -82,9 +107,18 @@ class UserService {
     async changeIsDeleted(email) {
         const user = await User.findOne({ where: { email } })
         const { email: userEmail, name, speciality, phone, role, isDeletedPlace } = user
-        await user.update({isDeletedPlace: !isDeletedPlace})
+        await user.update({ isDeletedPlace: !isDeletedPlace })
         return { user: { email: userEmail, name, speciality, phone, role, isDeletedPlace: user.isDeletedPlace } }
     }
+    async deleteUser(req, res, next) {
+        try {
+          const { id } = req.params;
+          await User.destroy({ where: { id } })
+          return res.json({ deleted: 'ok' });
+        } catch (e) {
+          next(e);
+        }
+      }
 }
 
 module.exports = new UserService();
