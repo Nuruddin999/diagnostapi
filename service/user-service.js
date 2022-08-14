@@ -123,6 +123,7 @@ class UserService {
     try {
       const { id } = req.params;
       const usersData = await User.findOne({ where: { id } });
+      delete usersData.password
       return res.json(usersData);
     } catch (e) {
       next(e);
