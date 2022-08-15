@@ -6,9 +6,9 @@ const { body } = require('express-validator');
 const authMiddleware = require('../middlewares/auth-middleware');
 
 router.post('/registration',
-    body('email').isEmail(),
-    body('password').isLength({ min: 3, max: 32 }),
-    userController.registration
+  body('email').isEmail(),
+  body('password').isLength({ min: 3, max: 32 }),
+  userController.registration
 );
 router.post('/login', userController.login);
 router.post('/logout', userController.logout);
@@ -17,9 +17,10 @@ router.post('/refresh', userController.refresh);
 router.get('/users', authMiddleware, userController.getUsers);
 router.get('/users/:id', authMiddleware, userController.getOne);
 router.get('/uscheck', authMiddleware, userController.checkUser);
+router.post('/rightupd', authMiddleware, userController.updateRights)
 router.get('/userdel/:id', authMiddleware, userController.deleteUser)
 router.get('/superadmn', userController.checkIsSuperAdmin);
-router.post('/changedel',authMiddleware, userController.changeIsDeleted);
+router.post('/changedel', authMiddleware, userController.changeIsDeleted);
 router.post('/application', authMiddleware, applicationController.create);
 router.get('/applications', authMiddleware, applicationController.getAll);
 router.get('/applications/:id', authMiddleware, applicationController.getOne);

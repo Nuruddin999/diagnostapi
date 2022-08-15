@@ -107,6 +107,11 @@ class UserController {
             next(e);
         }
     }
+    async updateRights(req,res,next){
+      const {entity, field, value, userId} = req.body
+      const result = await userService.updateUserRights(entity, field, value, userId)
+      return res.json(result)
+    }
 }
 
 

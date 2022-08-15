@@ -1,4 +1,4 @@
-const { User, Token } = require('../models');
+const { User, Token, Rights } = require('../models');
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const mailService = require('./mail-service');
@@ -8,7 +8,6 @@ const ApiError = require('../exceptions/api-error');
 const { Op } = require('sequelize');
 class UserService {
   async registration(body) {
-    console.log(JSON.stringify(body))
     const candidate = await User.findOne({
       where: {
         email: body.email
@@ -18,8 +17,13 @@ class UserService {
       throw ApiError.BadRequest(`Пользователь с почтовым адресом ${body.email} уже существует`)
     }
     const password = await bcrypt.hash(body.password, 10);
-    console.log('hashed', password)
-    await User.create({ ...body, password })
+    const result = await User.create({ ...body, password })
+    const rights = this.giveRights(body.role)
+    rights.forEach(async right => {
+      const userData = await User.findOne({ where: { id: result.id } })
+      const rightResult = await Rights.create({ ...right })
+      rightResult.setUser(userData)
+    })
     return { user: 'registrated' }
   }
 
@@ -63,12 +67,12 @@ class UserService {
     if (!userData || !tokenFromDb) {
       throw ApiError.UnauthorizedError();
     }
-    const user = await User.findOne({ where: { id: userData.id } });
-    const { email: userEmail, name, speciality, phone, role, isDeletedPlace } = user
+    const user = await User.findOne({ where: { id: userData.id }, include: [Rights] });
+    const { email: userEmail, name, speciality, phone, role, isDeletedPlace, Rights: rights } = user
     const userDto = new UserDto({ email: user.email, id: user.id, isActivated: true });
     const tokens = tokenService.generateTokens({ ...userDto });
     await tokenService.saveToken(user, tokens.refreshToken);
-    return { ...tokens, user: { email: userEmail, name, speciality, phone, role, isDeletedPlace } }
+    return { ...tokens, user: { email: userEmail, name, speciality, phone, role, isDeletedPlace, rights } }
   }
 
   async getAllUsers(req, res, next) {
@@ -122,12 +126,30 @@ class UserService {
   async getOne(req, res, next) {
     try {
       const { id } = req.params;
-      const usersData = await User.findOne({ where: { id } });
-      delete usersData.password
-      return res.json(usersData);
+      const usersData = await User.findOne({ where: { id }, include: [Rights] });
+      const processedUser = { ...usersData.dataValues }
+      delete processedUser.password
+      delete processedUser.Rights
+      processedUser.rights = usersData.dataValues.Rights
+      return res.json(processedUser);
     } catch (e) {
       next(e);
     }
+  }
+  giveRights(role) {
+    switch (role) {
+      case 'admin':
+        return [{ entity: 'applications', create: true, update: true, read: true, delete: true }, { entity: 'users', create: true, update: true, read: true, delete: true }, { entity: 'checkupPlanPlace', create: true, update: true, read: true, delete: true }]
+      case 'superadmin':
+        return [{ entity: 'applications', create: true, update: true, read: true, delete: true }, { entity: 'users', create: true, update: true, read: true, delete: true }, { entity: 'checkupPlanPlace', create: true, update: true, read: true, delete: true }]
+      case 'doctor':
+        return [{ entity: 'applications', create: true, update: true, read: true, delete: false }, { entity: 'users', create: false, update: false, read: false, delete: false }, { entity: 'checkupPlanPlace', create: false, update: false, read: false, delete: false }]
+    }
+  }
+  async updateUserRights(entity, field, value, userId) {
+    const rightsData = await Rights.findOne({ where: { userId, entity } })
+    const updateResult = await rightsData.update({ [field]: value });
+    return updateResult
   }
 }
 
