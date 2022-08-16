@@ -150,36 +150,6 @@ class UserService {
     const updateResult = await rightsData.update({ [field]: value });
     return updateResult
   }
-  async addRightsToExsitingUsers(body) {
-    const rights = this.giveRights(body.role)
-
-    const list = []
-    // rights.forEach(async right => {
-    //   console.log('right in each', right)
-    //   const userData = await User.findOne({ where: { id: body.id }, include: [Rights]})
-    //   // const rightsData = await Rights.findOrCreate({ where: { userId: body.id },   defaults: {
-    //   //   ...right
-    //   // } })
-
-    //   // //await rightsData.setUser(userData)
-    //   // const rightsresult = await Rights.findOne({ where: { userId: body.id } })
-    //   // await rightsresult.setUser(userData)
-    //   list.push(userData)
-    // })
-    for(let i = 0; i < rights.length; i ++) {
-      console.log('right in each', rights[i])
-      const rightsData = await Rights.findOne({ where: { userId: body.id, entity: rights[i].entity } })
-      if(!rightsData) {
-        const userData = await User.findOne({ where: { id: body.id }, include: [Rights]})
-        const rightResult = await Rights.create({ ...rights[i] })
-        await rightResult.setUser(userData)
-      }
-     // const updateResult = await rightsData.update({ [field]: value });
-     // return updateResult
-    }
-    const userData = await User.findOne({ where: { id: body.id }, include: [Rights]})
-    return {role: body.role, rights, userData}
-  }
 }
 
 module.exports = new UserService();
