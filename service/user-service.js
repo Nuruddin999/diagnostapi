@@ -178,7 +178,7 @@ class UserService {
      // return updateResult
     }
     const userData = await User.findOne({ where: { id: body.id }, include: [Rights]})
-    return {role, rights, userData}
+    return {role: body.role, rights, userData}
   }
 }
 
