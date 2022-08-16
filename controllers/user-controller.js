@@ -68,7 +68,7 @@ class UserController {
     }
     async getAllUsers(req, res, next) {
       try {
-          const users = await userService.getByLetter(req, res, next);
+          const users = await userService.getAllUsers(req, res, next);
           return users;
       } catch (e) {
           next(e);
