@@ -79,7 +79,7 @@ class UserService {
 
   async getAllUsers(req, res, next) {
     try {
-      const users = await User.findAll();
+      const users = await User.findAll({ include: [Rights] });
       return res.json(users);
     } catch (e) {
       next(e);
