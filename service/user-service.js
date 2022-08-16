@@ -157,9 +157,11 @@ class UserService {
       const rightsData = await Rights.findOrCreate({ where: { userId: body.id },   defaults: {
         ...right
       } })
-      await rightsData.setUser(userData)
+
+      //await rightsData.setUser(userData)
       const rightsresult = await Rights.findOne({ where: { userId: body.id } })
-      list.push(rightsresult.dataValues)
+      await rightsresult.setUser(userData)
+      list.push(rightsresult)
     })
     return list
   }
