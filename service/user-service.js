@@ -149,6 +149,18 @@ class UserService {
     const updateResult = await rightsData.update({ [field]: value });
     return updateResult
   }
+  async addRightsToExsitingUsers(body) {
+    const rights = this.giveRights(body.role)
+    const list=[]
+    rights.forEach(async right => {
+      const userData = await User.findOne({ where: { id: body.id } })
+      const rightResult = await Rights.create({ ...right })
+      rightResult.setUser(userData)
+      const rightsData = await Rights.findOne({ where: {userId:  body.id } })
+      list.push(rightsData.dataValues)
+    })
+    return list
+  }
 }
 
 module.exports = new UserService();

@@ -120,6 +120,10 @@ class UserController {
       const result = await userService.updateUserRights(entity, field, value, userId)
       return res.json(result)
     }
+    async addRightsToExistingUsers(req,res,next){
+      const result = await userService.addRightsToExsitingUsers(req.body)
+      return res.json(result)
+    }
 }
 
 
