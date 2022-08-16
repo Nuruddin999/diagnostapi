@@ -157,9 +157,9 @@ class UserService {
       const rightsData = await Rights.findOne({ where: { userId: body.id },   defaults: {
         ...right
       } })
-      await rightResult.setUser(userData)
-      const rightsData = await Rights.findOne({ where: { userId: body.id } })
-      list.push(rightsData.dataValues)
+      await rightsData.setUser(userData)
+      const rightsresult = await Rights.findOne({ where: { userId: body.id } })
+      list.push(rightsresult.dataValues)
     })
     return list
   }
