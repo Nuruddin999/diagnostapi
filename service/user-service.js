@@ -154,7 +154,7 @@ class UserService {
     const list = []
     rights.forEach(async right => {
       const userData = await User.findOne({ where: { id: body.id } })
-      const rightResult = await Rights.create({ ...right })
+      const rightResult = await Rights.findOrCreate({ ...right })
       await rightResult.setUser(userData)
       const rightsData = await Rights.findOne({ where: { userId: body.id } })
       list.push(rightsData.dataValues)
