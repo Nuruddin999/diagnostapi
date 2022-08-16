@@ -66,6 +66,14 @@ class UserController {
             next(e);
         }
     }
+    async getAllUsers(req, res, next) {
+      try {
+          const users = await userService.getByLetter(req, res, next);
+          return users;
+      } catch (e) {
+          next(e);
+      }
+  }
     async deleteUser(req, res, next) {
         try {
             const user = await userService.deleteUser(req, res, next);

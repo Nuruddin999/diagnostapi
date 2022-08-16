@@ -6,6 +6,8 @@ const tokenService = require('./token-service');
 const UserDto = require('../dtos/user-dto');
 const ApiError = require('../exceptions/api-error');
 const { Op } = require('sequelize');
+
+
 class UserService {
   async registration(body) {
     const candidate = await User.findOne({
@@ -37,7 +39,7 @@ class UserService {
   }
 
   async login(email, password) {
-    const user = await User.findOne({ where: { email } })
+    const user = await User.findOne({ where: { email }, include: [Rights] })
     if (!user) {
       throw ApiError.BadRequest('Пользователь с таким email не найден')
     }
@@ -46,11 +48,11 @@ class UserService {
     if (!isPassEquals) {
       throw ApiError.BadRequest('Неверный пароль');
     }
-    const { email: userEmail, name, speciality, phone, role, isDeletedPlace } = user
+    const { email: userEmail, name, speciality, phone, role, isDeletedPlace, Rights: rights } = user
     const userDto = new UserDto({ email: user.email, id: user.id, isActivated: true });
     const tokens = tokenService.generateTokens({ ...userDto });
     await tokenService.saveToken(user, tokens.refreshToken);
-    return { ...tokens, user: { email: userEmail, name, speciality, phone, role, isDeletedPlace } }
+    return { ...tokens, user: { email: userEmail, name, speciality, phone, role, isDeletedPlace, rights: rights.length > 0 ? rights:   [{ entity: 'applications', create: false, update: false, read: true, delete: false }, { entity: 'users', create: false, update: false, read: false, delete: false }, { entity: 'checkupPlanPlace', create: false, update: false, read: false, delete: false }] } }
   }
 
   async logout(refreshToken) {
@@ -77,11 +79,7 @@ class UserService {
 
   async getAllUsers(req, res, next) {
     try {
-      const { page, limit } = req.query;
-      const offset = page * limit - limit
-      const users = await User.findAndCountAll({
-        limit, offset
-      });
+      const users = await User.findAll();
       return res.json(users);
     } catch (e) {
       next(e);
