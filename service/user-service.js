@@ -52,7 +52,7 @@ class UserService {
     const userDto = new UserDto({ email: user.email, id: user.id, isActivated: true });
     const tokens = tokenService.generateTokens({ ...userDto });
     await tokenService.saveToken(user, tokens.refreshToken);
-    return { ...tokens, user: { email: userEmail, name, speciality, phone, role, isDeletedPlace, rights: rights.length > 0 ? rights:   [{ entity: 'applications', create: false, update: false, read: true, delete: false }, { entity: 'users', create: false, update: false, read: false, delete: false }, { entity: 'checkupPlanPlace', create: false, update: false, read: false, delete: false }] } }
+    return { ...tokens, user: { email: userEmail, name, speciality, phone, role, isDeletedPlace, rights: rights.length > 0 ? rights : [{ entity: 'applications', create: false, update: false, read: true, delete: false }, { entity: 'users', create: false, update: false, read: false, delete: false }, { entity: 'checkupPlanPlace', create: false, update: false, read: false, delete: false }] } }
   }
 
   async logout(refreshToken) {
@@ -151,12 +151,12 @@ class UserService {
   }
   async addRightsToExsitingUsers(body) {
     const rights = this.giveRights(body.role)
-    const list=[]
+    const list = []
     rights.forEach(async right => {
       const userData = await User.findOne({ where: { id: body.id } })
       const rightResult = await Rights.create({ ...right })
-      rightResult.setUser(userData)
-      const rightsData = await Rights.findOne({ where: {userId:  body.id } })
+      await rightResult.setUser(userData)
+      const rightsData = await Rights.findOne({ where: { userId: body.id } })
       list.push(rightsData.dataValues)
     })
     return list
