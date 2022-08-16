@@ -151,19 +151,20 @@ class UserService {
   }
   async addRightsToExsitingUsers(body) {
     const rights = this.giveRights(body.role)
-    const list = []
-    rights.forEach(async right => {
-      const userData = await User.findOne({ where: { id: body.id } })
-      const rightsData = await Rights.findOrCreate({ where: { userId: body.id },   defaults: {
-        ...right
-      } })
 
-      //await rightsData.setUser(userData)
-      const rightsresult = await Rights.findOne({ where: { userId: body.id } })
-      await rightsresult.setUser(userData)
-      list.push(rightsresult)
-    })
-    return list
+    // const list = []
+    // rights.forEach(async right => {
+    //   const userData = await User.findOne({ where: { id: body.id } })
+    //   const rightsData = await Rights.findOrCreate({ where: { userId: body.id },   defaults: {
+    //     ...right
+    //   } })
+
+    //   //await rightsData.setUser(userData)
+    //   const rightsresult = await Rights.findOne({ where: { userId: body.id } })
+    //   await rightsresult.setUser(userData)
+    //   list.push(rightsresult)
+    // })
+    return rights
   }
 }
 
