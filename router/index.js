@@ -16,6 +16,7 @@ router.get('/activate/:link', userController.activate);
 router.post('/refresh', userController.refresh);
 router.get('/users', authMiddleware, userController.getUsers);
 router.get('/ausersll', authMiddleware, userController.getAllUsers);
+router.post('/areu', authMiddleware, userController.addRightsToExistingUsers);
 router.get('/users/:id', authMiddleware, userController.getOne);
 router.get('/uscheck', authMiddleware, userController.checkUser);
 router.post('/rightupd', authMiddleware, userController.updateRights)
