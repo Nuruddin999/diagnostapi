@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     fundName: DataTypes.STRING,
     fundRequest: DataTypes.STRING,
     manager: DataTypes.STRING,
+    managerSpeciality: DataTypes.STRING,
     creationDate: DataTypes.STRING,
     mostProblDiagnosis: DataTypes.TEXT,
     secondaryDiagnosis: DataTypes.TEXT,
