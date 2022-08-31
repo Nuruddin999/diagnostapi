@@ -27,7 +27,7 @@ class UserService {
       const rightResult = await Rights.create({ ...right })
       rightResult.setUser(userData)
     })
-    return { user: 'registrated' }
+    return { user: result.id }
   }
 
   async activate(activationLink) {
@@ -49,11 +49,11 @@ class UserService {
     if (!isPassEquals) {
       throw ApiError.BadRequest('Неверный пароль');
     }
-    const { email: userEmail, name, speciality, phone, role, isDeletedPlace, Rights: rights } = user
+    const { email: userEmail, name, speciality, phone, role, isDeletedPlace, Rights: rights, urlSignPath, signFileName } = user
     const userDto = new UserDto({ email: user.email, id: user.id, isActivated: true });
     const tokens = tokenService.generateTokens({ ...userDto });
     await tokenService.saveToken(user, tokens.refreshToken);
-    return { ...tokens, user: { email: userEmail, name, speciality, phone, role, isDeletedPlace, rights: rights.length > 0 ? rights : [{ entity: 'applications', create: false, update: false, read: true, delete: false }, { entity: 'users', create: false, update: false, read: false, delete: false }, { entity: 'checkupPlanPlace', create: false, update: false, read: false, delete: false }] } }
+    return { ...tokens, user: { email: userEmail, urlSignPath, signFileName, name, speciality, phone, role, isDeletedPlace, rights: rights.length > 0 ? rights : [{ entity: 'applications', create: false, update: false, read: true, delete: false }, { entity: 'users', create: false, update: false, read: false, delete: false }, { entity: 'checkupPlanPlace', create: false, update: false, read: false, delete: false }], } }
   }
 
   async logout(refreshToken) {
@@ -71,11 +71,11 @@ class UserService {
       throw ApiError.UnauthorizedError();
     }
     const user = await User.findOne({ where: { id: userData.id }, include: [Rights] });
-    const {id, email: userEmail, name, speciality, phone, role, isDeletedPlace, Rights: rights } = user
+    const { id, email: userEmail, name, speciality, phone, role, isDeletedPlace, Rights: rights, urlSignPath, signFileName } = user
     const userDto = new UserDto({ email: user.email, id, isActivated: true });
     const tokens = tokenService.generateTokens({ ...userDto });
     await tokenService.saveToken(user, tokens.refreshToken);
-    return { ...tokens, user: { id, email: userEmail, name, speciality, phone, role, isDeletedPlace, rights } }
+    return { ...tokens, user: { id, email: userEmail,urlSignPath, signFileName, name, speciality, phone, role, isDeletedPlace, rights } }
   }
 
   async getAllUsers(req, res, next) {
@@ -111,7 +111,7 @@ class UserService {
     const user = await User.findOne({ where: { email } })
     const { email: userEmail, name, speciality, phone, role, isDeletedPlace, id } = user
     await user.update({ isDeletedPlace: !isDeletedPlace })
-    return { user: {id, email: userEmail, name, speciality, phone, role, isDeletedPlace: user.isDeletedPlace } }
+    return { user: { id, email: userEmail, name, speciality, phone, role, isDeletedPlace: user.isDeletedPlace } }
   }
   async deleteUser(req, res, next) {
     try {

@@ -55,7 +55,6 @@ class ApplicationController {
   async updateappl(req, res, next) {
     try {
       const { consiliumDoctors, id, diagnostic, mostProblDiagnosis, secondaryDiagnosis, checkupPlans, complaint, anamnesis, diagnosticData, patientName, patientBirthDate, comments, execDate } = req.body
-      console.log(comments)
       const applicationsData = await Application.findOne({ where: { id } });
       await applicationsData.update({ mostProblDiagnosis, secondaryDiagnosis, complaint, anamnesis, diagnosticData, patientName, patientBirthDate, execDate })
       await ConsiliumDoctor.destroy({ where: { applicationId: id } });
@@ -76,7 +75,10 @@ class ApplicationController {
       await Comment.destroy({ where: { applicationId: id } });
       comments.forEach(async (comment) => {
         const result = await Comment.create({ ...comment })
-        await result.setApplication(applicationsData)
+        if(result) {
+           await result.setApplication(applicationsData)
+        }
+
       })
       return res.json(applicationsData);
     } catch (e) {

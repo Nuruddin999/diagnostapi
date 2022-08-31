@@ -19,7 +19,7 @@ app.use(cors({
 app.use(express.static(root))
 app.use('/', router);
 app.use(errorMiddleware);
-
+app.use(express.urlencoded({ extended: true }));
 const start = async () => {
     try {
         app.listen(PORT, () => console.log(`Server started on PORT = ${PORT}`))

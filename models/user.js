@@ -28,7 +28,9 @@ module.exports = (sequelize, DataTypes) => {
     phone: DataTypes.STRING,
     role: DataTypes.STRING,
     isDeletedPlace: DataTypes.BOOLEAN,
-    department:DataTypes.STRING
+    department:DataTypes.STRING,
+    urlSignPath: DataTypes.STRING,
+    signFileName: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'User',
