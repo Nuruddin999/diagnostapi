@@ -1,12 +1,14 @@
 const userService = require('../service/user-service');
-const { Application, ConsiliumDoctor, Diagnostic, CheckupPlan, Comment } = require('../models');
+const { Application, ConsiliumDoctor, Diagnostic, CheckupPlan, Comment, User } = require('../models');
 const ApiError = require('../exceptions/api-error');
 const { Op } = require('sequelize');
 
 class ApplicationController {
   async create(req, res, next) {
     try {
-      const applicationData = await Application.create({ ...req.body });
+      const { managerId } = req.body
+      const manager = await User.findOne({ where: { id: managerId } })
+      const applicationData = await Application.create({ ...req.body, managerSignUrlPath: manager.urlSignPath, managerId });
       return res.json(applicationData);
     } catch (e) {
       next(e);
@@ -29,7 +31,9 @@ class ApplicationController {
     try {
       const { id } = req.params;
       const applicationsData = await Application.findOne({ where: { id }, include: [ConsiliumDoctor, Diagnostic, CheckupPlan, Comment] });
-      return res.json(applicationsData);
+      const manager = await User.findOne({ where: { id: applicationsData.managerId } })
+      const updatedApplicationsData = await applicationsData.update({ managerSignUrlPath: manager.urlSignPath });
+      return res.json(updatedApplicationsData);
     } catch (e) {
       next(e);
     }
@@ -75,8 +79,8 @@ class ApplicationController {
       await Comment.destroy({ where: { applicationId: id } });
       comments.forEach(async (comment) => {
         const result = await Comment.create({ ...comment })
-        if(result) {
-           await result.setApplication(applicationsData)
+        if (result) {
+          await result.setApplication(applicationsData)
         }
 
       })
