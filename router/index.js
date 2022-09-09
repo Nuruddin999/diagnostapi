@@ -20,6 +20,7 @@ router.get('/ausersll', authMiddleware, userController.getAllUsers);
 router.get('/users/:id', authMiddleware, userController.getOne);
 router.get('/uscheck', authMiddleware, userController.checkUser);
 router.post('/rightupd', authMiddleware, userController.updateRights)
+router.post('/usrupd', authMiddleware, userController.updatePrimeData)
 router.get('/userdel/:id', authMiddleware, userController.deleteUser)
 router.get('/superadmn', userController.checkIsSuperAdmin);
 router.post('/changedel', authMiddleware, userController.changeIsDeleted);
