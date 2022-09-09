@@ -150,6 +150,11 @@ class UserService {
     const updateResult = await rightsData.update({ [field]: value });
     return updateResult
   }
+  async updateUserPrimaryData(email, speciality, phone) {
+    const user = await User.findOne({ where: { email } })
+    await user.update({ speciality, phone})
+    return { user }
+  }
 }
 
 module.exports = new UserService();

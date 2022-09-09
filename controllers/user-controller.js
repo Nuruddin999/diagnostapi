@@ -120,6 +120,11 @@ class UserController {
       const result = await userService.updateUserRights(entity, field, value, userId)
       return res.json(result)
     }
+    async updatePrimeData(req,res,next){
+      const {email, phone, speciality} = req.body
+      const result = await userService.updateUserPrimaryData(email, speciality, phone)
+      return res.json(result)
+    }
 }
 
 
