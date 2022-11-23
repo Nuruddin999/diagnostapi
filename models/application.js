@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Application.init({
+    creator:DataTypes.STRING,
     patientRequest: DataTypes.STRING,
     fundName: DataTypes.STRING,
     fundRequest: DataTypes.STRING,
