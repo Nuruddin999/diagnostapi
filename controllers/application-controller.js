@@ -6,9 +6,9 @@ const { Op } = require('sequelize');
 class ApplicationController {
   async create(req, res, next) {
     try {
-      const { managerId } = req.body
-      const manager = await User.findOne({ where: { id: managerId } })
-      const applicationData = await Application.create({ ...req.body, managerSignUrlPath: manager.urlSignPath, managerId });
+      const { managerId, creator } = req.body
+      const manager = await User.findOne({ where: { id: creator } })
+      const applicationData = await Application.create({ ...req.body, managerSignUrlPath: manager.urlSignPath || '', managerId });
       return res.json(applicationData);
     } catch (e) {
       next(e);
@@ -31,7 +31,7 @@ class ApplicationController {
     try {
       const { id } = req.params;
       const applicationsData = await Application.findOne({ where: { id }, include: [ConsiliumDoctor, Diagnostic, CheckupPlan, Comment] });
-      const manager = await User.findOne({ where: { id: applicationsData.managerId } })
+      const manager = await User.findOne({ where: { id: applicationsData.creator } })
       await applicationsData.update({ managerSignUrlPath: manager ? manager.urlSignPath : null });
       return res.json(applicationsData);
     } catch (e) {
