@@ -8,7 +8,7 @@ class ApplicationController {
     try {
       const { managerId, creator } = req.body
       const manager = await User.findOne({ where: { id: creator } })
-      const applicationData = await Application.create({ ...req.body, managerSignUrlPath: manager.urlSignPath || '', managerId });
+      const applicationData = await Application.create({ ...req.body, managerSignUrlPath: manager.urlSignPath, managerId: manager.id });
       return res.json(applicationData);
     } catch (e) {
       next(e);
