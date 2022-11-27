@@ -7,7 +7,7 @@ class ApplicationController {
   async create(req, res, next) {
     try {
       const { managerId, creator } = req.body
-      const manager = await User.findOne({ where: { id: creator } })
+      const manager = await User.findOne({ where: { id: managerId } })
       const applicationData = await Application.create({ ...req.body, managerSignUrlPath: manager.urlSignPath, managerId: manager.id });
       return res.json(applicationData);
     } catch (e) {
@@ -44,8 +44,7 @@ class ApplicationController {
       const offset = page * limit - limit
       const applicationsData = await Application.findAndCountAll({
         where: {
-          ...(creator === 'all' ? {} : { creator }),
-          manager: { [Op.like]: `%${manager}%` },
+          ...(creator === 'all' ? {} : {  manager: { [Op.like]: `%${manager}%` } }),
           fundRequest: { [Op.like]: `%${fundRequest}%` },
           fundName: { [Op.like]: `%${fundName}%` },
           patientName: { [Op.like]: `%${patientName}%` },
@@ -85,6 +84,16 @@ class ApplicationController {
         }
 
       })
+      return res.json(applicationsData);
+    } catch (e) {
+      next(e);
+    }
+  }
+  async updateManager(req, res, next) {
+    try {
+      const { id, manager } = req.body
+      const applicationsData = await Application.findOne({ where: { id } });
+      await applicationsData.update({ mostProblDiagnosis, secondaryDiagnosis, complaint, anamnesis, diagnosticData, patientName, patientBirthDate, execDate })
       return res.json(applicationsData);
     } catch (e) {
       next(e);
