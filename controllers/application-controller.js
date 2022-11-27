@@ -31,7 +31,7 @@ class ApplicationController {
     try {
       const { id } = req.params;
       const applicationsData = await Application.findOne({ where: { id }, include: [ConsiliumDoctor, Diagnostic, CheckupPlan, Comment] });
-      const manager = await User.findOne({ where: { id: applicationsData.creator } })
+      const manager = await User.findOne({ where: { id: applicationsData.managerId } })
       await applicationsData.update({ managerSignUrlPath: manager ? manager.urlSignPath : null });
       return res.json(applicationsData);
     } catch (e) {
