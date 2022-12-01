@@ -30,7 +30,9 @@ class ApplicationController {
   async getOne(req, res, next) {
     try {
       const { id } = req.params;
-      const applicationsData = await Application.findOne({ where: { id }, include: [ConsiliumDoctor, Diagnostic, CheckupPlan, Comment] });
+      const applicationsData = await Application.findOne({ where: { id }, include: [ConsiliumDoctor, Diagnostic, CheckupPlan, Comment],  order: [
+        ['createdAt', 'DESC']
+      ] });
       const manager = await User.findOne({ where: { id: applicationsData.managerId } })
       await applicationsData.update({ managerSignUrlPath: manager ? manager.urlSignPath : null });
       return res.json(applicationsData);
@@ -49,7 +51,10 @@ class ApplicationController {
           fundName: { [Op.like]: `%${fundName}%` },
           patientName: { [Op.like]: `%${patientName}%` },
           patientRequest: { [Op.like]: `%${patientRequest}%` },
-        }, limit, offset
+        }, limit, offset,
+        order: [
+          ['createdAt', 'DESC']
+        ]
       });
       return res.json(applicationsData);
     } catch (e) {
