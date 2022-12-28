@@ -44,7 +44,6 @@ class UserService {
     if (!user) {
       throw ApiError.BadRequest('Пользователь с таким email не найден')
     }
-    console.log('passwpass', password + " " + user.password)
     const isPassEquals = await bcrypt.compare(password, user.password);
     if (!isPassEquals) {
       throw ApiError.BadRequest('Неверный пароль');
