@@ -46,6 +46,7 @@ module.exports = (sequelize, DataTypes) => {
     diagnosticData: DataTypes.TEXT,
     patientName: DataTypes.STRING,
     patientBirthDate: DataTypes.STRING,
+    checkUpPlaceIsDeleted: DataTypes.BOOLEAN,
     execDate: DataTypes.STRING
   }, {
     sequelize,

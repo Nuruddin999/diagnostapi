@@ -30,10 +30,12 @@ class ApplicationController {
   async getOne(req, res, next) {
     try {
       const { id } = req.params;
-      const applicationsData = await Application.findOne({ where: { id }, include: [ConsiliumDoctor, Diagnostic, CheckupPlan, Comment],  order: [
-        [CheckupPlan,'id', 'ASC'],
-          [Comment,'id', 'ASC']
-      ] });
+      const applicationsData = await Application.findOne({
+        where: { id }, include: [ConsiliumDoctor, Diagnostic, CheckupPlan, Comment], order: [
+          [CheckupPlan, 'id', 'ASC'],
+          [Comment, 'id', 'ASC']
+        ]
+      });
       const manager = await User.findOne({ where: { id: applicationsData.managerId } })
       await applicationsData.update({ managerSignUrlPath: manager ? manager.urlSignPath : null });
       return res.json(applicationsData);
@@ -47,7 +49,7 @@ class ApplicationController {
       const offset = page * limit - limit
       const applicationsData = await Application.findAndCountAll({
         where: {
-          ...(creator === 'all' ? {} : {  managerId: { [Op.like]: `%${creator}%` } }),
+          ...(creator === 'all' ? {} : { managerId: { [Op.like]: `%${creator}%` } }),
           fundRequest: { [Op.like]: `%${fundRequest}%` },
           fundName: { [Op.like]: `%${fundName}%` },
           patientName: { [Op.like]: `%${patientName}%` },
@@ -101,6 +103,16 @@ class ApplicationController {
       const applicationsData = await Application.findOne({ where: { id } });
       await applicationsData.update({ mostProblDiagnosis, secondaryDiagnosis, complaint, anamnesis, diagnosticData, patientName, patientBirthDate, execDate })
       return res.json(applicationsData);
+    } catch (e) {
+      next(e);
+    }
+  }
+  async changeCheckupPlaceDeleteOption(req, res, next) {
+    try {
+      const { id } = req.body
+      const applicationsData = await Application.findOne({ where: { id } });
+      await applicationsData.update({ checkUpPlaceIsDeleted: !applicationsData.checkUpPlaceIsDeleted })
+      return res.json({ checkUpPlaceIsDeleted: applicationsData.checkUpPlaceIsDeleted });
     } catch (e) {
       next(e);
     }
