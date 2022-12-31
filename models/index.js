@@ -5,12 +5,12 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
+const config = require('../config/config');
 const db = {};
 
 let sequelize;
 
-sequelize = new Sequelize("database_diagnost", 'postgres', "fillpostgress999", { host: process.env.PG_HOST, dialect:"postgres"});
+sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, { host: config.HOST, dialect:"postgres"});
 
 
 fs
