@@ -2,6 +2,7 @@ const Router = require('express').Router;
 const userController = require('../controllers/user-controller');
 const applicationController = require('../controllers/application-controller');
 const fileController = require('../controllers/file-controller');
+const specialityController = require('../controllers/speciality-controller');
 const router = new Router();
 const { body } = require('express-validator');
 const authMiddleware = require('../middlewares/auth-middleware');
@@ -34,4 +35,6 @@ router.get('/applicationdel/:id', authMiddleware, applicationController.deleteAp
 router.post("/upload", fileController.upload);
 router.get("/files/:user", fileController.getListFiles);
 router.get("/file/:name", fileController.download);
+router.post("/docspec", authMiddleware, specialityController.create);
+router.get("/docspecs", authMiddleware, specialityController.getAll);
 module.exports = router

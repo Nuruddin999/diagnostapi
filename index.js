@@ -9,6 +9,7 @@ const errorMiddleware = require('./middlewares/error-middleware');
 const config = require('./config/config');
 const PORT = process.env.PORT || 5000;
 const root = require('path').join(__dirname, 'build')
+const { Speciality } = require('./models');
 
 const app = express()
 app.use(express.json());
@@ -29,5 +30,6 @@ const start = async () => {
         console.log(e);
     }
 }
+
 
 start()
