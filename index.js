@@ -18,7 +18,7 @@ app.use(cors({
     origin: config.clientURL
 }));
 app.use(express.static(root))
-app.use('/api', router);
+app.use('/', router);
 app.use(errorMiddleware);
 app.use(express.urlencoded({ extended: true }));
 const start = async () => {
