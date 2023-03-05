@@ -24,7 +24,9 @@ class SpecialityController {
             const { page, limit } = req.query;
             const offset = page * limit - limit
             const specialityData = await Speciality.findAndCountAll({
-                limit, offset
+                limit, offset,   order: [
+                    ['createdAt', 'DESC']
+                ]
             });
             return res.json(specialityData);
         } catch (e) {
