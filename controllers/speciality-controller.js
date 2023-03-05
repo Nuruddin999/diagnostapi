@@ -1,7 +1,5 @@
-const userService = require('../service/user-service');
 const { Speciality } = require('../models');
 const ApiError = require('../exceptions/api-error');
-const { Op } = require('sequelize');
 
 class SpecialityController {
     async create(req, res, next) {
