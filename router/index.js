@@ -37,4 +37,5 @@ router.get("/files/:user", fileController.getListFiles);
 router.get("/file/:name", fileController.download);
 router.post("/docspec", authMiddleware, specialityController.create);
 router.get("/docspecs", authMiddleware, specialityController.getAll);
+router.get('/docspecs/:id', authMiddleware, specialityController.deleteSpeciality)
 module.exports = router
