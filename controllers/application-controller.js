@@ -32,8 +32,8 @@ class ApplicationController {
       const { id } = req.params;
       const applicationsData = await Application.findOne({
         where: { id }, include: [ConsiliumDoctor, Diagnostic, CheckupPlan, Comment], order: [
-          [CheckupPlan, 'id', 'ASC'],
-          [Comment, 'id', 'ASC']
+          [CheckupPlan, 'createdAt', 'ASC'],
+          [Comment, 'createdAt', 'ASC']
         ]
       });
       const manager = await User.findOne({ where: { id: applicationsData.managerId } })
