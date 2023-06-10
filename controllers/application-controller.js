@@ -32,8 +32,8 @@ class ApplicationController {
       const { id } = req.params;
       const applicationsData = await Application.findOne({
         where: { id }, include: [ConsiliumDoctor, Diagnostic, CheckupPlan, Comment], order: [
-          [CheckupPlan, 'createdAt', 'ASC'],
-          [Comment, 'createdAt', 'ASC']
+          [CheckupPlan, 'id', 'ASC'],
+          [Comment, 'id', 'ASC']
         ]
       });
       const manager = await User.findOne({ where: { id: applicationsData.managerId } })
@@ -80,7 +80,6 @@ class ApplicationController {
         await result.setApplication(applicationsData)
       })
       await CheckupPlan.destroy({ where: { applicationId: id } });
-      console.log('plans',[...checkupPlans])
       for (const cDoctor of checkupPlans) {
         const result = await CheckupPlan.create({ ...cDoctor });
         await result.setApplication(applicationsData);
