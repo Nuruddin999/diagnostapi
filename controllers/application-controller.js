@@ -75,18 +75,18 @@ class ApplicationController {
         await result.setApplication(applicationsData)
       })
       await Diagnostic.destroy({ where: { applicationId: id } });
-      diagnostic.forEach(async (cDoctor) => {
-        const result = await Diagnostic.create({ ...cDoctor })
-        await result.setApplication(applicationsData)
-      })
+      for (const cDoctor of diagnostic) {
+        const result = await Diagnostic.create({ ...cDoctor });
+        await result.setApplication(applicationsData);
+      }
       await CheckupPlan.destroy({ where: { applicationId: id } });
       for (const cDoctor of checkupPlans) {
         const result = await CheckupPlan.create({ ...cDoctor });
         await result.setApplication(applicationsData);
       }
       await Comment.destroy({ where: { applicationId: id } });
-      for (const cDoctor of comments) {
-        const result = await Comment.create({ ...cDoctor });
+      for (const comment of comments) {
+        const result = await Comment.create({ ...comment });
         await result.setApplication(applicationsData);
       }
       return res.json(applicationsData);
