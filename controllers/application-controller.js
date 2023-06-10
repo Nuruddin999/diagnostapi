@@ -96,9 +96,10 @@ class ApplicationController {
   }
   async updateManager(req, res, next) {
     try {
-      const { id, manager } = req.body
+      const { id, managerId } = req.body
       const applicationsData = await Application.findOne({ where: { id } });
-      await applicationsData.update({ mostProblDiagnosis, secondaryDiagnosis, complaint, anamnesis, diagnosticData, patientName, patientBirthDate, execDate })
+      const newManager = await User.findOne({ where: { id: managerId } })
+      await applicationsData.update({ managerId, manager:newManager.name })
       return res.json(applicationsData);
     } catch (e) {
       next(e);
