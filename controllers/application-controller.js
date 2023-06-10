@@ -49,7 +49,7 @@ class ApplicationController {
       const offset = page * limit - limit
       const applicationsData = await Application.findAndCountAll({
         where: {
-          ...(creator === 'all' ?  { manager: { [Op.like]: `%${manager}%` } }:{}),
+          ...(creator === 'all' ? { manager: { [Op.like]: `%${manager}%` } } :{managerId:creator}),
           fundRequest: { [Op.like]: `%${fundRequest}%` },
           fundName: { [Op.like]: `%${fundName}%` },
           patientName: { [Op.like]: `%${patientName}%` },
