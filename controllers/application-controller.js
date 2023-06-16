@@ -99,7 +99,8 @@ class ApplicationController {
       const { id, managerId } = req.body
       const applicationsData = await Application.findOne({ where: { id } });
       const newManager = await User.findOne({ where: { id: managerId } })
-      await applicationsData.update({ managerId, manager:newManager.name })
+      const {name,speciality,urlSignPath} = newManager
+      await applicationsData.update({ managerId, manager:name, managerSpeciality: speciality, managerSignUrlPath:urlSignPath })
       return res.json(applicationsData);
     } catch (e) {
       next(e);

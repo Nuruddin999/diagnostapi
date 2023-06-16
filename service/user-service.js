@@ -1,4 +1,4 @@
-const { User, Token, Rights } = require('../models');
+const { User, Token, Rights, Application} = require('../models');
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const mailService = require('./mail-service');
@@ -149,9 +149,9 @@ class UserService {
     const updateResult = await rightsData.update({ [field]: value });
     return updateResult
   }
-  async updateUserPrimaryData(email, speciality, phone) {
+  async updateUserPrimaryData(email, speciality, phone, name) {
     const user = await User.findOne({ where: { email } })
-    await user.update({ speciality, phone})
+    await user.update({ speciality, phone,name})
     return { user }
   }
 }
