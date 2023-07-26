@@ -20,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
   CheckupPlan.init({
     kind: DataTypes.TEXT,
     place: DataTypes.TEXT,
-    target: DataTypes.TEXT
+    target: DataTypes.TEXT,
+    order: DataTypes.NUMBER
   }, {
     sequelize,
     modelName: 'CheckupPlan',
