@@ -31,9 +31,25 @@ class ApplicationController {
     try {
       const { id } = req.params;
       const applicationsData = await Application.findOne({
-        where: { id }, include: [ConsiliumDoctor, Diagnostic, CheckupPlan, Comment], order: [
-          [CheckupPlan, 'id', 'ASC'],
-          [Comment, 'id', 'ASC']
+        where: { id }, include: [
+          {
+            model: ConsiliumDoctor,
+            separate: true // Отдельный запрос для связи ConsiliumDoctor
+          },
+          {
+            model: Diagnostic,
+            separate: true // Отдельный запрос для связи Diagnostic
+          },
+          {
+            model: CheckupPlan,
+            separate: true, // Отдельный запрос для связи CheckupPlan
+            order: [['id', 'ASC']] // Сортировка CheckupPlan по возрастанию id
+          },
+          {
+            model: Comment,
+            separate: true, // Отдельный запрос для связи Comment
+            order: [['id', 'ASC']] // Сортировка Comment по возрастанию id
+          }
         ]
       });
       const manager = await User.findOne({ where: { id: applicationsData.managerId } })
