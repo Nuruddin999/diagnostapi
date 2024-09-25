@@ -1,12 +1,10 @@
-const userService = require('../service/user-service');
 const { Application, ConsiliumDoctor, Diagnostic, CheckupPlan, Comment, User } = require('../models');
-const ApiError = require('../exceptions/api-error');
 const { Op } = require('sequelize');
 
 class ApplicationController {
   async create(req, res, next) {
     try {
-      const { managerId, creator } = req.body
+      const { managerId } = req.body
       const manager = await User.findOne({ where: { id: managerId } })
       const applicationData = await Application.create({ ...req.body, managerSignUrlPath: manager.urlSignPath, managerId: manager.id });
       return res.json(applicationData);
@@ -82,9 +80,9 @@ class ApplicationController {
   }
   async updateappl(req, res, next) {
     try {
-      const { consiliumDoctors, id, diagnostic, mostProblDiagnosis, secondaryDiagnosis, checkupPlans, complaint, anamnesis, diagnosticData, patientName, patientBirthDate, comments, execDate } = req.body
+      const { consiliumDoctors, id, diagnostic, mostProblDiagnosis, secondaryDiagnosis, checkupPlans, complaint, anamnesis, diagnosticData, patientName, patientBirthDate, comments, execDate,patientPromoter } = req.body
       const applicationsData = await Application.findOne({ where: { id } });
-      await applicationsData.update({ mostProblDiagnosis, secondaryDiagnosis, complaint, anamnesis, diagnosticData, patientName, patientBirthDate, execDate })
+      await applicationsData.update({ mostProblDiagnosis, secondaryDiagnosis, complaint, anamnesis, diagnosticData, patientName, patientBirthDate, execDate, patientPromoter })
       await ConsiliumDoctor.destroy({ where: { applicationId: id } });
       consiliumDoctors.forEach(async (cDoctor) => {
         const result = await ConsiliumDoctor.create({ ...cDoctor })
