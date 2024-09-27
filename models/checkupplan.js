@@ -20,7 +20,11 @@ module.exports = (sequelize, DataTypes) => {
   CheckupPlan.init({
     kind: DataTypes.TEXT,
     place: DataTypes.TEXT,
-    target: DataTypes.TEXT
+    target: DataTypes.TEXT,
+    supplier:  DataTypes.TEXT,
+    address: DataTypes.TEXT,
+    phone:DataTypes.TEXT,
+    price: DataTypes.TEXT,
   }, {
     sequelize,
     modelName: 'CheckupPlan',
