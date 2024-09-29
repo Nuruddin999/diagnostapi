@@ -11,11 +11,11 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            Smeta.hasMany(models.AdditionalCosts, {
+            Smeta.hasMany(models.SmetaCheckupPlan, {
                 foreignKey: 'smetaId',
                 onDelete: 'cascade'
             })
-            Smeta.hasMany(models.SmetaCheckupPlan, {
+            Smeta.hasMany(models.AdditionalCost, {
                 foreignKey: 'smetaId',
                 onDelete: 'cascade'
             })
@@ -23,11 +23,12 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     Smeta.init({
+        creator: DataTypes.STRING,
         patientPromoter: DataTypes.STRING,
         creationDate: DataTypes.STRING,
-        mostProblDiagnosis: DataTypes.TEXT,
         patientName: DataTypes.STRING,
         patientBirthDate: DataTypes.STRING,
+        mostProblDiagnosis: DataTypes.TEXT,
         execDate: DataTypes.STRING
     }, {
         sequelize,
