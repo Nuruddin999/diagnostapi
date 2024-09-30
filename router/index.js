@@ -3,6 +3,7 @@ const userController = require('../controllers/user-controller');
 const applicationController = require('../controllers/application-controller');
 const fileController = require('../controllers/file-controller');
 const specialityController = require('../controllers/speciality-controller');
+const smetaController = require('../controllers/smeta-controller');
 const router = new Router();
 const { body } = require('express-validator');
 const authMiddleware = require('../middlewares/auth-middleware');
@@ -39,4 +40,5 @@ router.get("/file/:name", fileController.download);
 router.post("/docspec", authMiddleware, specialityController.create);
 router.get("/docspecs", authMiddleware, specialityController.getAll);
 router.get('/docspecs/:id', authMiddleware, specialityController.deleteSpeciality)
+router.get('/smetas', authMiddleware, smetaController.getAll);
 module.exports = router
