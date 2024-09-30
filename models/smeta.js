@@ -10,12 +10,11 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            // define association here
-            Smeta.hasMany(models.SmetaCheckupPlan, {
+            Smeta.hasMany(models.Smetaplan, {
                 foreignKey: 'smetaId',
                 onDelete: 'cascade'
             })
-            Smeta.hasMany(models.AdditionalCost, {
+            Smeta.hasMany(models.Smetacost, {
                 foreignKey: 'smetaId',
                 onDelete: 'cascade'
             })
@@ -23,13 +22,11 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     Smeta.init({
-        creator: DataTypes.STRING,
-        patientPromoter: DataTypes.STRING,
-        creationDate: DataTypes.STRING,
         patientName: DataTypes.STRING,
         patientBirthDate: DataTypes.STRING,
-        mostProblDiagnosis: DataTypes.TEXT,
-        execDate: DataTypes.STRING
+        diagnosis: DataTypes.STRING,
+        applId: DataTypes.STRING,
+        patientPromoter: DataTypes.STRING,
     }, {
         sequelize,
         modelName: 'Smeta',
