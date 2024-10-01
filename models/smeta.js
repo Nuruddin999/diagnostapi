@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
         diagnosis: DataTypes.STRING,
         applId: DataTypes.STRING,
         patientPromoter: DataTypes.STRING,
+        isReadyForCoordinator: DataTypes.BOOLEAN
     }, {
         sequelize,
         modelName: 'Smeta',
