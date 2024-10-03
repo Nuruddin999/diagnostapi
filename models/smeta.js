@@ -18,6 +18,22 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'smetaId',
                 onDelete: 'cascade'
             })
+            Smeta.hasMany(models.Smetaroadcost, {
+                foreignKey: 'smetaId',
+                onDelete: 'cascade'
+            })
+            Smeta.hasMany(models.Smetaroaccomodation, {
+                foreignKey: 'smetaId',
+                onDelete: 'cascade'
+            })
+            Smeta.hasMany(models.Smetatransportcost, {
+                foreignKey: 'smetaId',
+                onDelete: 'cascade'
+            })
+            Smeta.hasMany(models.Smetamealcost, {
+                foreignKey: 'smetaId',
+                onDelete: 'cascade'
+            })
         }
     }
 
