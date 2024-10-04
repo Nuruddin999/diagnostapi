@@ -120,6 +120,18 @@ class UserService {
             urlSignPath,
             signFileName
         } = user
+        const smetaRights = rights.map(el => el.get({ plain: true })).filter(filteredEl=>filteredEl.entity === 'smetas')
+        const isAdmin = role === 'superadmin' || 'admin'
+        if (smetaRights.length === 0 && isAdmin) {
+            const rightResult = await Rights.create({
+                entity: 'smetas',
+                    create: true,
+                    update: true,
+                    read: true,
+                    delete: true
+            })
+            rightResult.setUser(user)
+        }
         const userDto = new UserDto({email: user.email, id, isActivated: true});
         const tokens = tokenService.generateTokens({...userDto});
         await tokenService.saveToken(user, tokens.refreshToken);
@@ -135,7 +147,13 @@ class UserService {
                 phone,
                 role,
                 isDeletedPlace,
-                rights
+                rights: smetaRights.length === 0 && isAdmin ? [...rights,{
+                    entity: 'smetas',
+                    create: true,
+                    update: true,
+                    read: true,
+                    delete: true
+                }] : rights
             }
         }
     }
@@ -291,7 +309,7 @@ class UserService {
                     update: true,
                     read: true,
                     delete: true
-                }, {entity: 'checkupPlanPlace', create: false, update: false, read: false, delete: false}]
+                }]
         }
     }
 
