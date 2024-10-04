@@ -109,7 +109,11 @@ class ApplicationController {
                 patientBirthDate,
                 comments,
                 execDate,
-                patientPromoter
+                patientPromoter,
+                manager,
+                managerSpeciality,
+                fundName,
+                fundRequest
             } = req.body
             const applicationsData = await Application.findOne({where: {id}});
             await applicationsData.update({
@@ -142,7 +146,11 @@ class ApplicationController {
                 diagnosis: mostProblDiagnosis || '',
                 patientName,
                 patientBirthDate,
-                patientPromoter
+                patientPromoter,
+                managerName:manager,
+                managerSpeciality,
+                customer:fundName,
+                fundRequest
             }
             const [smetaData, created] = await Smeta.findOrCreate({
                 where: {applId: id.toString()}, defaults: columnsForSmeta

@@ -43,7 +43,12 @@ module.exports = (sequelize, DataTypes) => {
         diagnosis: DataTypes.STRING,
         applId: DataTypes.STRING,
         patientPromoter: DataTypes.STRING,
-        isReadyForCoordinator: DataTypes.BOOLEAN
+        isReadyForCoordinator: DataTypes.BOOLEAN,
+        patientRequest:DataTypes.STRING,
+        fundRequest:DataTypes.STRING,
+        patientPhone:DataTypes.STRING,
+        status:DataTypes.STRING,
+        customer:DataTypes.STRING
     }, {
         sequelize,
         modelName: 'Smeta',
