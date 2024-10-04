@@ -122,14 +122,15 @@ class UserService {
         } = user
         const smetaRights = rights.map(el => el.get({ plain: true })).filter(filteredEl=>filteredEl.entity === 'smetas')
         const isAdmin = role === 'superadmin' || 'admin'
-        if (smetaRights.length === 0 && isAdmin) {
-            const rightResult = await Rights.create({
-                entity: 'smetas',
-                    create: true,
-                    update: true,
-                    read: true,
-                    delete: true
-            })
+        const smetasRights = {
+            entity: 'smetas',
+            create:  isAdmin,
+            update:  isAdmin,
+            read:  isAdmin,
+            delete:  isAdmin
+        }
+        if (smetaRights.length === 0) {
+            const rightResult = await Rights.create(smetasRights)
             rightResult.setUser(user)
         }
         const userDto = new UserDto({email: user.email, id, isActivated: true});
@@ -147,12 +148,8 @@ class UserService {
                 phone,
                 role,
                 isDeletedPlace,
-                rights: smetaRights.length === 0 && isAdmin ? [...rights,{
-                    entity: 'smetas',
-                    create: true,
-                    update: true,
-                    read: true,
-                    delete: true
+                rights: smetaRights.length === 0  ? [...rights,{
+                  ...smetasRights
                 }] : rights
             }
         }
