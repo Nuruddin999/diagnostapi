@@ -25,6 +25,9 @@ module.exports = (sequelize, DataTypes) => {
     address: DataTypes.TEXT,
     phone:DataTypes.TEXT,
     price: DataTypes.TEXT,
+      medicine: DataTypes.STRING,
+      qty: DataTypes.STRING,
+      totalPrice: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'CheckupPlan',
