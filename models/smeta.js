@@ -34,6 +34,10 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'smetaId',
                 onDelete: 'cascade'
             })
+            Smeta.hasMany(models.Smetasecdiag, {
+                foreignKey: 'smetaId',
+                onDelete: 'cascade'
+            })
         }
     }
 

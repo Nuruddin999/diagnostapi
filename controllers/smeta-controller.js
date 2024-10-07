@@ -1,4 +1,4 @@
-const {Smeta, Smetaroadcost, Smetatransportcost, Smetamealcost, Smetaroaccomodation, Smetacost, Smetaplan} = require("../models");
+const {Smeta, Smetaroadcost, Smetatransportcost, Smetamealcost, Smetaroaccomodation, Smetacost, Smetaplan, Smetasecdiag} = require("../models");
 
 class SmetaController {
     async getAll(req, res, next) {
@@ -47,6 +47,11 @@ class SmetaController {
                     },
                     {
                         model: Smetaplan,
+                        separate: true,
+                        order: [['id', 'ASC']]
+                    },
+                    {
+                        model: Smetasecdiag,
                         separate: true,
                         order: [['id', 'ASC']]
                     },
