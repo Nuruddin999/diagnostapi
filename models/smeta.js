@@ -48,7 +48,9 @@ module.exports = (sequelize, DataTypes) => {
         fundRequest:DataTypes.STRING,
         patientPhone:DataTypes.STRING,
         status:DataTypes.STRING,
-        customer:DataTypes.STRING
+        customer:DataTypes.STRING,
+        managerName:DataTypes.STRING,
+        managerSpeciality:DataTypes.STRING
     }, {
         sequelize,
         modelName: 'Smeta',
