@@ -1,4 +1,4 @@
-const {Smeta} = require("../models");
+const {Smeta, Smetaroadcost, Smetatransportcost, Smetamealcost, Smetaroaccomodation, Smetacost, Smetaplan} = require("../models");
 
 class SmetaController {
     async getAll(req, res, next) {
@@ -12,6 +12,47 @@ class SmetaController {
                 limit, offset
             });
             return res.json(smetasData);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    async getOne(req, res, next) {
+        try {
+            const {id} = req.params;
+            const smetaData = await Smeta.findOne({
+                where: {id}, include: [
+                    {
+                        model: Smetaroadcost,
+                        separate: true
+                    },
+                    {
+                        model: Smetaroaccomodation,
+                        separate: true
+                    },
+                    {
+                        model: Smetamealcost,
+                        separate: true,
+                        order: [['id', 'ASC']]
+                    },
+                    {
+                        model: Smetatransportcost,
+                        separate: true,
+                        order: [['id', 'ASC']]
+                    },
+                    {
+                        model: Smetacost,
+                        separate: true,
+                        order: [['id', 'ASC']]
+                    },
+                    {
+                        model: Smetaplan,
+                        separate: true,
+                        order: [['id', 'ASC']]
+                    },
+                ]
+            });
+            return res.json(smetaData);
         } catch (e) {
             next(e);
         }
