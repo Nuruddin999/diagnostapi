@@ -108,7 +108,7 @@ class SmetaController {
                 Smetaroaccomodations,
                 Smetaroadcosts,
                 smetaTransportCosts,
-                smetaMealCosts,
+                Smetamealcosts,
                 smetaSecDiags,
             } = req.body
             const foundedSmeta = await Smeta.findOne({
@@ -132,6 +132,10 @@ class SmetaController {
             await Smetaroaccomodation.destroy({where:{smetaId:id}})
             for (const smetaAccomodationCostItem of Smetaroaccomodations) {
                 await Smetaroaccomodation.create({...smetaAccomodationCostItem, smetaId:id});
+            }
+            await Smetamealcost.destroy({where:{smetaId:id}})
+            for (const smetaMealCostItem of Smetamealcosts) {
+                await Smetamealcost.create({...smetaMealCostItem, smetaId:id});
             }
             return res.json({success: true});
         } catch
