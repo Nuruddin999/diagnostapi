@@ -107,7 +107,7 @@ class SmetaController {
                 smetacosts,
                 Smetaroaccomodations,
                 Smetaroadcosts,
-                smetaTransportCosts,
+                Smetatransportcosts,
                 Smetamealcosts,
                 smetaSecDiags,
             } = req.body
@@ -136,6 +136,10 @@ class SmetaController {
             await Smetamealcost.destroy({where:{smetaId:id}})
             for (const smetaMealCostItem of Smetamealcosts) {
                 await Smetamealcost.create({...smetaMealCostItem, smetaId:id});
+            }
+            await Smetatransportcost.destroy({where:{smetaId:id}})
+            for (const smetaTransportCostItem of Smetatransportcosts) {
+                await Smetatransportcost.create({...smetaTransportCostItem, smetaId:id});
             }
             return res.json({success: true});
         } catch
