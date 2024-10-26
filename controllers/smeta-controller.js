@@ -6,7 +6,7 @@ const {
     Smetaroaccomodation,
     Smetacost,
     Smetaplan,
-    Smetasecdiag
+    Smetasecdiag,
 } = require("../models");
 
 class SmetaController {
@@ -106,14 +106,14 @@ class SmetaController {
                 smetaplans,
                 smetacosts,
                 smetaAccomodation,
-                smetaRoadCosts,
+                Smetaroadcosts,
                 smetaTransportCosts,
                 smetaMealCosts,
                 smetaSecDiags,
             } = req.body
             const foundedSmeta = await Smeta.findOne({
                 where: {
-                    applId: id.toString()
+                    id: id.toString()
                 }
             })
             if
@@ -122,9 +122,13 @@ class SmetaController {
             }
             await Smeta.update({patientName,patientBirthDate,diagnosis,managerName,managerSpeciality}, {
                 where: {
-                    applId: id.toString()
+                    id: id.toString()
                 }
             })
+            await Smetaroadcost.destroy({where:{smetaId:id}})
+            for (const smetaRoadCostItem of Smetaroadcosts) {
+             await Smetaroadcost.create({...smetaRoadCostItem, smetaId:id});
+            }
             return res.json({success: true});
         } catch
             (e) {
