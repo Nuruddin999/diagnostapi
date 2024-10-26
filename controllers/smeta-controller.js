@@ -105,7 +105,7 @@ class SmetaController {
                 managerSpeciality,
                 smetaplans,
                 smetacosts,
-                smetaAccomodation,
+                Smetaroaccomodations,
                 Smetaroadcosts,
                 smetaTransportCosts,
                 smetaMealCosts,
@@ -128,6 +128,10 @@ class SmetaController {
             await Smetaroadcost.destroy({where:{smetaId:id}})
             for (const smetaRoadCostItem of Smetaroadcosts) {
              await Smetaroadcost.create({...smetaRoadCostItem, smetaId:id});
+            }
+            await Smetaroaccomodation.destroy({where:{smetaId:id}})
+            for (const smetaAccomodationCostItem of Smetaroaccomodations) {
+                await Smetaroadcost.create({...smetaAccomodationCostItem, smetaId:id});
             }
             return res.json({success: true});
         } catch
