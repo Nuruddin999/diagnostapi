@@ -151,7 +151,7 @@ class SmetaController {
             }
             await Smetasecdiag.destroy({where:{smetaId:id}})
             for (const smetaSecDiagsItem of Smetasecdiags) {
-                await Smetasecdiag.create({name: smetaSecDiagsItem, smetaId:id});
+                await Smetasecdiag.create({...smetaSecDiagsItem, smetaId:id});
             }
             return res.json({success: true});
         } catch
