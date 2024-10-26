@@ -1,4 +1,13 @@
-const {Smeta, Smetaroadcost, Smetatransportcost, Smetamealcost, Smetaroaccomodation, Smetacost, Smetaplan, Smetasecdiag} = require("../models");
+const {
+    Smeta,
+    Smetaroadcost,
+    Smetatransportcost,
+    Smetamealcost,
+    Smetaroaccomodation,
+    Smetacost,
+    Smetaplan,
+    Smetasecdiag
+} = require("../models");
 
 class SmetaController {
     async getAll(req, res, next) {
@@ -84,6 +93,45 @@ class SmetaController {
             next(e);
         }
     }
+
+    async updateSmetaFields(req, res, next) {
+        try {
+            const {
+                id,
+                patientName,
+                patientBirthDate,
+                diagnosis,
+                managerName,
+                managerSpeciality,
+                smetaplans,
+                smetacosts,
+                smetaAccomodation,
+                smetaRoadCosts,
+                smetaTransportCosts,
+                smetaMealCosts,
+                smetaSecDiags,
+            } = req.body
+            const foundedSmeta = await Smeta.findOne({
+                where: {
+                    applId: id.toString()
+                }
+            })
+            if
+            (!foundedSmeta) {
+                return res.json({success: false, message: 'Смета не найдена. Сначала сохраните заключение'});
+            }
+            await Smeta.update({patientName,patientBirthDate,diagnosis,managerName,managerSpeciality}, {
+                where: {
+                    applId: id.toString()
+                }
+            })
+            return res.json({success: true});
+        } catch
+            (e) {
+            next(e);
+        }
+    }
 }
 
-module.exports = new SmetaController();
+module
+    .exports = new SmetaController();
