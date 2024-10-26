@@ -131,7 +131,7 @@ class SmetaController {
             }
             await Smetaroaccomodation.destroy({where:{smetaId:id}})
             for (const smetaAccomodationCostItem of Smetaroaccomodations) {
-                await Smetaroadcost.create({...smetaAccomodationCostItem, smetaId:id});
+                await Smetaroaccomodations.create({...smetaAccomodationCostItem, smetaId:id});
             }
             return res.json({success: true});
         } catch
