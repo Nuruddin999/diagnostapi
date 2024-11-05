@@ -44,17 +44,17 @@ module.exports = (sequelize, DataTypes) => {
     Smeta.init({
         patientName: DataTypes.STRING,
         patientBirthDate: DataTypes.STRING,
-        diagnosis: DataTypes.STRING,
+        diagnosis: DataTypes.TEXT,
         applId: DataTypes.STRING,
         patientPromoter: DataTypes.STRING,
         isReadyForCoordinator: DataTypes.BOOLEAN,
-        patientRequest:DataTypes.STRING,
-        fundRequest:DataTypes.STRING,
-        patientPhone:DataTypes.STRING,
-        status:DataTypes.STRING,
-        customer:DataTypes.STRING,
-        managerName:DataTypes.STRING,
-        managerSpeciality:DataTypes.STRING
+        patientRequest: DataTypes.TEXT,
+        fundRequest: DataTypes.TEXT,
+        patientPhone: DataTypes.STRING,
+        status: DataTypes.STRING,
+        customer: DataTypes.STRING,
+        managerName: DataTypes.STRING,
+        managerSpeciality: DataTypes.STRING
     }, {
         sequelize,
         modelName: 'Smeta',
