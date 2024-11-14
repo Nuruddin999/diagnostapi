@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
     credentials: true,
-    origin: 'http://localhost:3000'
+    origin: ['http://localhost:3000', 'http://localhost']
 }));
 app.use(express.static(root))
 app.use('/', router);
@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 const start = async () => {
     try {
         app.listen(PORT, () => console.log(`Server started on PORT = ${PORT}`))
-      //  await sequelize.sync({ alter: true })
+        //  await sequelize.sync({ alter: true })
     } catch (e) {
         console.log(e);
     }
