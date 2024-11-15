@@ -11,7 +11,8 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
     credentials: true,
-    origin: 'http://188.68.220.210:3000'
+    // origin: 'http://188.68.220.210:3000'
+    origin: 'http://localhost:3000'
 }));
 app.use(express.static(root))
 app.use('/', router);
