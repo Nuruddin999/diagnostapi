@@ -110,6 +110,7 @@ class SmetaController {
                 Smetatransportcosts,
                 Smetamealcosts,
                 Smetasecdiags,
+                totalAllSum
             } = req.body
             const foundedSmeta = await Smeta.findOne({
                 where: {
@@ -120,7 +121,7 @@ class SmetaController {
             (!foundedSmeta) {
                 return res.json({success: false, message: 'Смета не найдена. Сначала сохраните заключение'});
             }
-            await Smeta.update({patientName,patientBirthDate,diagnosis,managerName,managerSpeciality}, {
+            await Smeta.update({patientName,patientBirthDate,diagnosis,managerName,managerSpeciality,totalAllSum}, {
                 where: {
                     id: id.toString()
                 }
