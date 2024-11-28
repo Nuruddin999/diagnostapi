@@ -54,7 +54,8 @@ module.exports = (sequelize, DataTypes) => {
         status: DataTypes.STRING,
         customer: DataTypes.STRING,
         managerName: DataTypes.STRING,
-        managerSpeciality: DataTypes.STRING
+        managerSpeciality: DataTypes.STRING,
+        totalAllSum: DataTypes.STRING,
     }, {
         sequelize,
         modelName: 'Smeta',
