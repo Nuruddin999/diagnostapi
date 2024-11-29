@@ -30,7 +30,7 @@ class SmetaController {
         try {
             const {id} = req.params;
             const smetaData = await Smeta.findOne({
-                where: {id}, include: [
+                where: {id,isReadyForCoordinator:true}, include: [
                     {
                         model: Smetaroadcost,
                         separate: true
