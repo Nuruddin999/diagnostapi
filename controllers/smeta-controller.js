@@ -18,7 +18,10 @@ class SmetaController {
                 where: {
                     isReadyForCoordinator: true
                 },
-                limit, offset
+                limit, offset,
+                order: [
+                    ['createdAt', 'DESC']
+                ]
             });
             return res.json(smetasData);
         } catch (e) {
