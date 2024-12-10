@@ -6,7 +6,7 @@ const {
     Smetaroaccomodation,
     Smetacost,
     Smetaplan,
-    Smetasecdiag, Application,
+    Smetasecdiag,
 } = require("../models");
 
 class SmetaController {
