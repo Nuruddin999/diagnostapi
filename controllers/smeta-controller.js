@@ -6,7 +6,7 @@ const {
     Smetaroaccomodation,
     Smetacost,
     Smetaplan,
-    Smetasecdiag,
+    Smetasecdiag, Application,
 } = require("../models");
 
 class SmetaController {
@@ -160,6 +160,16 @@ class SmetaController {
             return res.json({success: true});
         } catch
             (e) {
+            next(e);
+        }
+    }
+
+    async deleteSmeta(req, res, next) {
+        try {
+            const {id} = req.params;
+            await Smeta.destroy({where: {id}})
+            return res.json({deleted: 'ok'});
+        } catch (e) {
             next(e);
         }
     }
