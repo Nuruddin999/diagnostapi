@@ -53,7 +53,7 @@ module.exports = {
             ),
         ]);
     },
-    down: (queryInterface, Sequelize) => {
+    down: (queryInterface) => {
         return Promise.all([
             queryInterface.removeColumn('Smetaplans', 'currency'),
             queryInterface.removeColumn('Smetaroadcosts', 'currency'),
