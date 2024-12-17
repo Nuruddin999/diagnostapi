@@ -145,9 +145,9 @@ class ApplicationController {
                 await result.setApplication(applicationsData);
             }
             const curator = await User.findOne({where: {role: 'сoordinator'}})
-            let coordinatorURLSignPath = curator?.urlSignPath
-            let coordinatorSignFile = curator?.signFileName
-            let coordinatorName = curator?.name
+            let coordinatorURLSignPath = curator?.urlSignPath || ''
+            let coordinatorSignFile = curator?.signFileName || ''
+            let coordinatorName = curator?.name || ''
 
             const columnsForSmeta = {
                 diagnosis: mostProblDiagnosis || '',
@@ -158,7 +158,9 @@ class ApplicationController {
                 managerSpeciality,
                 customer:fundName,
                 fundRequest,
-                coordinator
+                coordinatorName,
+                coordinatorSignFile,
+                coordinatorURLSignPath,
             }
             const [smetaData, created] = await Smeta.findOrCreate({
                 where: {applId: id.toString()}, defaults: columnsForSmeta
