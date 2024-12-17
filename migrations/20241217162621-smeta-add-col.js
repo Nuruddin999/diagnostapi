@@ -6,14 +6,17 @@ module.exports = {
             queryInterface.addColumn('Smeta', 'coordinatorName', {
                 type: Sequelize.DataTypes.STRING,
                 allowNull: false,
+                defaultValue:""
             }),
             queryInterface.addColumn('Smeta', 'coordinatorURLSignPath', {
                 type: Sequelize.DataTypes.STRING,
                 allowNull: false,
+                defaultValue:""
             }),
             queryInterface.addColumn('Smeta', 'coordinatorSignFile', {
                 type: Sequelize.DataTypes.STRING,
                 allowNull: false,
+                defaultValue:""
             })
         ]);
     },
