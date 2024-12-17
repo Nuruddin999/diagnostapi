@@ -56,6 +56,9 @@ module.exports = (sequelize, DataTypes) => {
         managerName: DataTypes.STRING,
         managerSpeciality: DataTypes.STRING,
         totalAllSum: DataTypes.STRING,
+        coordinatorName: DataTypes.STRING,
+        coordinatorURLSignPath: DataTypes.STRING,
+        coordinatorSignFile: DataTypes.STRING,
     }, {
         sequelize,
         modelName: 'Smeta',

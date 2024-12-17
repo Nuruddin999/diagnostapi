@@ -4,7 +4,9 @@ const {
     Diagnostic,
     CheckupPlan,
     Comment,
-    User, Smeta, Smetaplan
+    User,
+    Smeta,
+    Smetaplan
 } = require('../models');
 const {Op} = require('sequelize');
 
@@ -142,6 +144,11 @@ class ApplicationController {
                 const result = await Comment.create({...comment});
                 await result.setApplication(applicationsData);
             }
+            const curator = await User.findOne({where: {role: 'сoordinator'}})
+            let coordinatorURLSignPath = curator?.urlSignPath
+            let coordinatorSignFile = curator?.signFileName
+            let coordinatorName = curator?.name
+
             const columnsForSmeta = {
                 diagnosis: mostProblDiagnosis || '',
                 patientName,
@@ -150,7 +157,8 @@ class ApplicationController {
                 managerName:manager,
                 managerSpeciality,
                 customer:fundName,
-                fundRequest
+                fundRequest,
+                coordinator
             }
             const [smetaData, created] = await Smeta.findOrCreate({
                 where: {applId: id.toString()}, defaults: columnsForSmeta
