@@ -144,11 +144,11 @@ class ApplicationController {
                 const result = await Comment.create({...comment});
                 await result.setApplication(applicationsData);
             }
-            const curator = await User.findOne({where: {role: 'сoordinator'}})
+            const curator = await User.findOne({where: {role: 'coordinator'}})
+
             let coordinatorURLSignPath = curator?.urlSignPath || ''
             let coordinatorSignFile = curator?.signFileName || ''
             let coordinatorName = curator?.name || ''
-
             const columnsForSmeta = {
                 diagnosis: mostProblDiagnosis || '',
                 patientName,
