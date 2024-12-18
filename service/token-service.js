@@ -22,10 +22,9 @@ class TokenService {
     }
 
     validateRefreshToken(token) {
-        console.log('refr',token)
         try {
-            const userData = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
-            return userData;
+             return  jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+
         } catch (e) {
             return null;
         }
@@ -43,13 +42,13 @@ class TokenService {
     }
 
     async removeToken(refreshToken) {
-        const tokenData = await Token.destroy({where: { refreshToken }})
-        return tokenData;
+        return  await Token.destroy({where: { refreshToken }})
+
     }
 
     async findToken(refreshToken) {
-        const tokenData = await Token.findOne({ where: { refreshToken } })
-        return tokenData;
+        return  await Token.findOne({ where: { refreshToken } })
+
     }
 }
 
