@@ -101,7 +101,7 @@ class SmetaController {
     async updateSmetaStatus(req, res, next) {
         try {
             const {id, status} = req.body
-            await Smeta.update({status}, {
+            await Smeta.update({status:status}, {
                 where: {
                     applId: id.toString()
                 }
