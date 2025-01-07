@@ -43,6 +43,7 @@ router.get('/docspecs/:id', authMiddleware, specialityController.deleteSpecialit
 router.get('/smetas', authMiddleware, smetaController.getAll);
 router.get('/smetas/:id', smetaController.getOne);
 router.post('/smetas-mkrd', authMiddleware, smetaController.updateSmeta);
+router.post('/smetas-mvdir', authMiddleware, smetaController.updateSmetaStatus);
 router.post('/smetas-upd-f', authMiddleware, smetaController.updateSmetaFields);
 router.get('/smetasdel/:id', authMiddleware, smetaController.deleteSmeta)
 module.exports = router
