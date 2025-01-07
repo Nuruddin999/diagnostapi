@@ -34,7 +34,7 @@ class SmetaController {
         try {
             const {id} = req.params;
             const smetaData = await Smeta.findOne({
-                where: {id,isReadyForCoordinator:true}, include: [
+                where: {id, isReadyForCoordinator: true}, include: [
                     {
                         model: Smetaroadcost,
                         separate: true
@@ -101,14 +101,11 @@ class SmetaController {
     async updateSmetaStatus(req, res, next) {
         try {
             const {id, status} = req.body
-            console.log('status', status)
-            console.log('id', id)
-          const result =  await Smeta.update({status:status}, {
+            await Smeta.update({status: status}, {
                 where: {
-                    applId: id.toString()
+                    id: id.toString()
                 }
             })
-            console.log('res', result)
             return res.json({success: true});
         } catch (e) {
             next(e);
@@ -143,38 +140,45 @@ class SmetaController {
             (!foundedSmeta) {
                 return res.json({success: false, message: 'Смета не найдена. Сначала сохраните заключение'});
             }
-            await Smeta.update({patientName,patientBirthDate,diagnosis,managerName,managerSpeciality,totalAllSum}, {
+            await Smeta.update({
+                patientName,
+                patientBirthDate,
+                diagnosis,
+                managerName,
+                managerSpeciality,
+                totalAllSum
+            }, {
                 where: {
                     id: id.toString()
                 }
             })
-            await Smetaroadcost.destroy({where:{smetaId:id}})
+            await Smetaroadcost.destroy({where: {smetaId: id}})
             for (const smetaRoadCostItem of Smetaroadcosts) {
-             await Smetaroadcost.create({...smetaRoadCostItem, smetaId:id});
+                await Smetaroadcost.create({...smetaRoadCostItem, smetaId: id});
             }
-            await Smetaroaccomodation.destroy({where:{smetaId:id}})
+            await Smetaroaccomodation.destroy({where: {smetaId: id}})
             for (const smetaAccomodationCostItem of Smetaroaccomodations) {
-                await Smetaroaccomodation.create({...smetaAccomodationCostItem, smetaId:id});
+                await Smetaroaccomodation.create({...smetaAccomodationCostItem, smetaId: id});
             }
-            await Smetamealcost.destroy({where:{smetaId:id}})
+            await Smetamealcost.destroy({where: {smetaId: id}})
             for (const smetaMealCostItem of Smetamealcosts) {
-                await Smetamealcost.create({...smetaMealCostItem, smetaId:id});
+                await Smetamealcost.create({...smetaMealCostItem, smetaId: id});
             }
-            await Smetatransportcost.destroy({where:{smetaId:id}})
+            await Smetatransportcost.destroy({where: {smetaId: id}})
             for (const smetaTransportCostItem of Smetatransportcosts) {
-                await Smetatransportcost.create({...smetaTransportCostItem, smetaId:id});
+                await Smetatransportcost.create({...smetaTransportCostItem, smetaId: id});
             }
-            await Smetacost.destroy({where:{smetaId:id}})
+            await Smetacost.destroy({where: {smetaId: id}})
             for (const smetaCostItem of Smetacosts) {
-                await Smetacost.create({...smetaCostItem, smetaId:id});
+                await Smetacost.create({...smetaCostItem, smetaId: id});
             }
-            await Smetaplan.destroy({where:{smetaId:id}})
+            await Smetaplan.destroy({where: {smetaId: id}})
             for (const smetaPlanItem of Smetaplans) {
-                await Smetaplan.create({...smetaPlanItem, smetaId:id});
+                await Smetaplan.create({...smetaPlanItem, smetaId: id});
             }
-            await Smetasecdiag.destroy({where:{smetaId:id}})
+            await Smetasecdiag.destroy({where: {smetaId: id}})
             for (const smetaSecDiagsItem of Smetasecdiags) {
-                await Smetasecdiag.create({...smetaSecDiagsItem, smetaId:id});
+                await Smetasecdiag.create({...smetaSecDiagsItem, smetaId: id});
             }
             return res.json({success: true});
         } catch
