@@ -101,11 +101,14 @@ class SmetaController {
     async updateSmetaStatus(req, res, next) {
         try {
             const {id, status} = req.body
-            await Smeta.update({status:status}, {
+            console.log('status', status)
+            console.log('id', id)
+          const res =  await Smeta.update({status:status}, {
                 where: {
                     applId: id.toString()
                 }
             })
+            console.log('res', res)
             return res.json({success: true});
         } catch (e) {
             next(e);
