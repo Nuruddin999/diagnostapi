@@ -11,17 +11,6 @@ const {
 
 class SmetaController {
 
-    async checkIsSmetaExists(req, res) {
-        const {id} = req.body
-        const foundedSmeta = await Smeta.findOne({
-            where: {
-                applId: id.toString()
-            }
-        })
-        if (!foundedSmeta) {
-            return res.json({success: false, message: 'Смета не найдена. Сначала сохраните заключение'});
-        }
-    }
     async getAll(req, res, next) {
         try {
             const {page, limit} = req.query;
@@ -89,7 +78,15 @@ class SmetaController {
 
     async updateSmeta(req, res, next) {
         try {
-            await this.checkIsSmetaExists(req, res);
+            const {id} = req.body
+            const foundedSmeta = await Smeta.findOne({
+                where: {
+                    applId: id.toString()
+                }
+            })
+            if (!foundedSmeta) {
+                return res.json({success: false, message: 'Смета не найдена. Сначала сохраните заключение'});
+            }
             await Smeta.update({isReadyForCoordinator: true}, {
                 where: {
                     applId: id.toString()
