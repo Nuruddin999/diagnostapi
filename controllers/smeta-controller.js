@@ -13,11 +13,12 @@ class SmetaController {
 
     async getAll(req, res, next) {
         try {
-            const {page, limit} = req.query;
+            const {page, limit, isOnCheck} = req.query;
             const offset = page * limit - limit
             const smetasData = await Smeta.findAndCountAll({
                 where: {
-                    isReadyForCoordinator: true
+                    isReadyForCoordinator: true,
+                    status: isOnCheck ? 'oncheck' : null,
                 },
                 limit, offset,
                 order: [
