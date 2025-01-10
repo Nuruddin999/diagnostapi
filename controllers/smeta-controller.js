@@ -18,7 +18,7 @@ class SmetaController {
             const smetasData = await Smeta.findAndCountAll({
                 where: {
                     isReadyForCoordinator: true,
-                    status: isOnCheck ? 'oncheck' : null,
+                    status: isOnCheck === 'true' ? 'oncheck' : null,
                 },
                 limit, offset,
                 order: [
