@@ -305,6 +305,14 @@ class UserService {
         await user.update({speciality, phone, name})
         return {user}
     }
+
+    async defineUserRole(email) {
+        const userRole = await User.findOne({where: {email}})
+        if (!userRole) {
+            throw new ApiError.UnauthorizedError();
+        }
+        return userRole?.role === 'superadmin' || userRole?.role === 'admin';
+    }
 }
 
 module.exports = new UserService();

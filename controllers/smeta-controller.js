@@ -7,18 +7,32 @@ const {
     Smetacost,
     Smetaplan,
     Smetasecdiag,
+    ReworkComment,
+    ReworkCommentFile
 } = require("../models");
+const {Op} = require("sequelize");
+const userService = require('../service/user-service');
 
 class SmetaController {
 
     async getAll(req, res, next) {
         try {
-            const {page, limit, isOnCheck} = req.query;
+            const {page, limit, status} = req.query;
             const offset = page * limit - limit
+            const isAdmin = await userService.defineUserRole(req.user?.email)
+
+
+            if (!isAdmin && (status === 'oncheck' || status === 'realization')) {
+                return res.json({count: 0, rows: []});
+            }
+
             const smetasData = await Smeta.findAndCountAll({
                 where: {
                     isReadyForCoordinator: true,
-                    status: isOnCheck === 'true' ? 'oncheck' : null,
+                    status: {
+                        [Op.or]: status === 'rework' ? ['rework', null] : [status], // Match 'rework' or NULL
+                    },
+
                 },
                 limit, offset,
                 order: [
@@ -69,6 +83,17 @@ class SmetaController {
                         separate: true,
                         order: [['id', 'ASC']]
                     },
+                    {
+                        model: ReworkComment,
+                        separate: true,
+                        order: [['id', 'ASC']],
+                        include: [
+                            {
+                                model: ReworkCommentFile,
+                                required: false,
+                            },
+                        ],
+                    },
                 ]
             });
             return res.json(smetaData);
@@ -102,6 +127,10 @@ class SmetaController {
     async updateSmetaStatus(req, res, next) {
         try {
             const {id, status} = req.body
+            const isAdmin = await userService.defineUserRole(req.user?.email)
+            if (!isAdmin && (status === 'rework' || status === 'realization')) {
+                return res.json({count: 0, rows: []});
+            }
             await Smeta.update({status: status}, {
                 where: {
                     id: id.toString()
@@ -193,6 +222,16 @@ class SmetaController {
             const {id} = req.params;
             await Smeta.destroy({where: {id}})
             return res.json({deleted: 'ok'});
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    async addReworkComment(req, res, next) {
+        try {
+            const {comment, smetaId} = req.body
+            const result = await ReworkComment.create({comment, smetaId})
+            return res.json({added: result.id});
         } catch (e) {
             next(e);
         }

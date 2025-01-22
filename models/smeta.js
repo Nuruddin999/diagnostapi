@@ -38,6 +38,10 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'smetaId',
                 onDelete: 'cascade'
             })
+            Smeta.hasMany(models.ReworkComment, {
+                foreignKey: 'smetaId',
+                onDelete: 'cascade'
+            })
         }
     }
 

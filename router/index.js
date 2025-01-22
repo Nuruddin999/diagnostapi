@@ -35,6 +35,7 @@ router.post('/updman/', authMiddleware, applicationController.updateManager);
 router.post('/changedeloptn/', authMiddleware, applicationController.changeCheckupPlaceDeleteOption);
 router.get('/applicationdel/:id', authMiddleware, applicationController.deleteApplication)
 router.post("/upload", fileController.upload);
+router.post("/uploadrwf", fileController.uploadReviewFiles);
 router.get("/files/:user", fileController.getListFiles);
 router.get("/file/:name", fileController.download);
 router.post("/docspec", authMiddleware, specialityController.create);
@@ -43,6 +44,7 @@ router.get('/docspecs/:id', authMiddleware, specialityController.deleteSpecialit
 router.get('/smetas', authMiddleware, smetaController.getAll);
 router.get('/smetas/:id', smetaController.getOne);
 router.post('/smetas-mkrd', authMiddleware, smetaController.updateSmeta);
+router.post('/smetas-mkrwc', authMiddleware, smetaController.addReworkComment);
 router.post('/smetas-mvdir', authMiddleware, smetaController.updateSmetaStatus);
 router.post('/smetas-upd-f', authMiddleware, smetaController.updateSmetaFields);
 router.get('/smetasdel/:id', authMiddleware, smetaController.deleteSmeta)
