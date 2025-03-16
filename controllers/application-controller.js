@@ -65,8 +65,39 @@ class ApplicationController {
                 ]
             });
             const manager = await User.findOne({where: {id: applicationsData.managerId}})
+            const prevCommetnsList = applicationsData.Comments
+            const newFormatComments = Array(10).fill(null).map(() => ({}));
+            if (prevCommetnsList[0].title !== 'Подопечный (ая) обратился в') {
+                newFormatComments[0].comment = prevCommetnsList[0].comment
+                newFormatComments[0].title = 'Подопечный (ая) обратился в'
+                newFormatComments[1].comment = ''
+                newFormatComments[1].title = 'с просьбой помочь ему (ей) в'
+                newFormatComments[2].comment = prevCommetnsList[1].comment
+                newFormatComments[2].title = 'Подопечным были предоставлены личные документы'
+                newFormatComments[3].comment = ''
+                newFormatComments[3].title = 'медицинские документы'
+                newFormatComments[4].comment = prevCommetnsList[2].comment
+                newFormatComments[4].title = 'Мы связались с подопечным. После получения документов и ознакомления с ними, мы'
+                newFormatComments[5].comment = ''
+                newFormatComments[5].title = 'Дополнительно у подопечного мы запросили:'
+                newFormatComments[6].comment = ''
+                newFormatComments[6].title = 'Дополнительно  подопечного мы направили:'
+                newFormatComments[7].comment = ''
+                newFormatComments[7].title = 'Дополнительно мы запросили информацию у:'
+                newFormatComments[8].comment = ''
+                newFormatComments[8].title = 'Проблемы при обработке заявки:'
+                newFormatComments[9].comment = prevCommetnsList[3].comment
+                newFormatComments[9].title = 'Завершаем обработку заявки:'
+                await Comment.destroy({where: {applicationId: id}});
+                for (const comment of newFormatComments) {
+                    const result = await Comment.create({...comment});
+                    await result.setApplication(applicationsData);
+                }
+            }
             await applicationsData.update({managerSignUrlPath: manager ? manager.urlSignPath : null});
-            return res.json(applicationsData);
+            return prevCommetnsList[0].title !== 'Подопечный (ая) обратился в' ? res.json({
+                ...applicationsData.toJSON(), Comments: newFormatComments
+            }) : res.json(applicationsData);
         } catch (e) {
             next(e);
         }
@@ -154,9 +185,9 @@ class ApplicationController {
                 patientName,
                 patientBirthDate,
                 patientPromoter,
-                managerName:manager,
+                managerName: manager,
                 managerSpeciality,
-                customer:fundName,
+                customer: fundName,
                 fundRequest,
                 coordinatorName,
                 coordinatorSignFile,
@@ -167,7 +198,7 @@ class ApplicationController {
 
             })
             if (!created) {
-                 await Smeta.update(columnsForSmeta,{where:{applId:id.toString()}})
+                await Smeta.update(columnsForSmeta, {where: {applId: id.toString()}})
                 await Smetaplan.destroy({where: {smetaId: smetaData.id}})
             }
 
