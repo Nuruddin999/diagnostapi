@@ -66,8 +66,9 @@ class ApplicationController {
             });
             const manager = await User.findOne({where: {id: applicationsData.managerId}})
             const prevCommetnsList = applicationsData.Comments
+            const isOldFormat = prevCommetnsList.length > 0 && prevCommetnsList[0].title !== 'Подопечный (ая) обратился в'
             const newFormatComments = Array(10).fill(null).map(() => ({}));
-            if (prevCommetnsList[0].title !== 'Подопечный (ая) обратился в') {
+            if (isOldFormat) {
                 newFormatComments[0].comment = prevCommetnsList[0].comment
                 newFormatComments[0].title = 'Подопечный (ая) обратился в'
                 newFormatComments[1].comment = ''
@@ -95,7 +96,7 @@ class ApplicationController {
                 }
             }
             await applicationsData.update({managerSignUrlPath: manager ? manager.urlSignPath : null});
-            return prevCommetnsList[0].title !== 'Подопечный (ая) обратился в' ? res.json({
+            return isOldFormat ? res.json({
                 ...applicationsData.toJSON(), Comments: newFormatComments
             }) : res.json(applicationsData);
         } catch (e) {
