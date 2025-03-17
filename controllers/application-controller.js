@@ -65,11 +65,36 @@ class ApplicationController {
                 ]
             });
             const manager = await User.findOne({where: {id: applicationsData.managerId}})
+            /**
+             * времменное решение ! вернулись к старым гшаблонам а в базе уже есть новые поэтому их переводим к старому виду
+             * после реализации новых шаблонов переписать и учесть
+             * */
+            const prevCommetnsList = applicationsData.Comments
+            const isNewFormat = prevCommetnsList.length > 0 && prevCommetnsList[0].title === 'Подопечный (ая) обратился в'
+            const newFormatComments = Array(5).fill(null).map(() => ({}));
+            if (isNewFormat) {
+                newFormatComments[0].comment = prevCommetnsList[0].comment
+                newFormatComments[0].title = 'Куда обратился пациент и с какой помощью',
+                newFormatComments[1].comment =  prevCommetnsList[2].comment
+                newFormatComments[1].title = 'Что было им предоставлено, или наоборот, ничего не было предоставлено, только жалоюы и просьбы'
+                newFormatComments[2].comment = prevCommetnsList[4].comment
+                newFormatComments[2].title = 'Какая работа была проделана'
+                newFormatComments[3].comment = prevCommetnsList[9].comment
+                newFormatComments[3].title = 'Почему быоо рекомендовано то, или иное, на основании чего'
+                newFormatComments[4].comment = ''
+                newFormatComments[4].title = 'Заключение: "По результатам проделанной работы считаю просьбу подопечного (ой) обоснованной (или нет) и возможной для одобрения (или нет)"'
+                await Comment.destroy({where: {applicationId: id}});
+                for (const comment of newFormatComments) {
+                    const result = await Comment.create({...comment});
+                    await result.setApplication(applicationsData);
+                }
+            }
             await applicationsData.update({managerSignUrlPath: manager ? manager.urlSignPath : null});
-            return res.json(applicationsData);
+            return isNewFormat ? res.json({
+                ...applicationsData.toJSON(), Comments: newFormatComments
+            }) : res.json(applicationsData);
         } catch (e) {
             next(e);
-
         }
     }
 
