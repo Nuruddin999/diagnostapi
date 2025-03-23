@@ -48,4 +48,5 @@ router.post('/smetas-mkrwc', authMiddleware, smetaController.addReworkComment);
 router.post('/smetas-mvdir', authMiddleware, smetaController.updateSmetaStatus);
 router.post('/smetas-upd-f', authMiddleware, smetaController.updateSmetaFields);
 router.get('/smetasdel/:id', authMiddleware, smetaController.deleteSmeta)
+router.get('/smetaureq/:id',userController.getOneForSmeta);
 module.exports = router

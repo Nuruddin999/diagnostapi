@@ -125,6 +125,14 @@ class UserController {
       const result = await userService.updateUserPrimaryData(email, speciality, phone,name)
       return res.json(result)
     }
+    async getOneForSmeta(req, res, next) {
+        try {
+            const {urlSignPath} = await userService.getOne(req, res, next);
+            return urlSignPath
+        } catch (e) {
+            next(e);
+        }
+    }
 }
 
 
