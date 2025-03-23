@@ -92,7 +92,7 @@ class ApplicationController {
                 newFormatComments[10].comment = ''
                 newFormatComments[10].title = 'Решение принято на основании вышеизложенных данных'
                 newFormatComments[11].comment = ''
-                newFormatComments[11].title = 'Завершаем обработку заявки:'
+                newFormatComments[11].title = 'Заключение: просьбу подопечного считаем'
                 await Comment.destroy({ where: { applicationId: id } });
                 for (const comment of newFormatComments) {
                     const result = await Comment.create({ ...comment });
