@@ -67,7 +67,7 @@ class ApplicationController {
             const manager = await User.findOne({ where: { id: applicationsData.managerId } })
             const prevCommetnsList = applicationsData.Comments
             const isOldFormat = prevCommetnsList.length > 0 && prevCommetnsList[0].title !== 'Подопечный (ая) обратился в'
-            const newFormatComments = Array(10).fill(null).map(() => ({}));
+            const newFormatComments = Array(12).fill(null).map(() => ({}));
             if (isOldFormat) {
                 newFormatComments[0].comment = prevCommetnsList[0].comment
                 newFormatComments[0].title = 'Подопечный (ая) обратился в'
