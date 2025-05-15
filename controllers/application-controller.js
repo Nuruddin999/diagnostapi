@@ -8,13 +8,13 @@ const {
     Smeta,
     Smetaplan
 } = require('../models');
-const { Op } = require('sequelize');
+const {Op} = require('sequelize');
 
 class ApplicationController {
     async create(req, res, next) {
         try {
-            const { managerId } = req.body
-            const manager = await User.findOne({ where: { id: managerId } })
+            const {managerId} = req.body
+            const manager = await User.findOne({where: {id: managerId}})
             const applicationData = await Application.create({
                 ...req.body,
                 managerSignUrlPath: manager.urlSignPath,
@@ -28,7 +28,7 @@ class ApplicationController {
 
     async getAll(req, res, next) {
         try {
-            const { page, limit } = req.query;
+            const {page, limit} = req.query;
             const offset = page * limit - limit
             const applicationsData = await Application.findAndCountAll({
                 limit, offset
@@ -41,9 +41,9 @@ class ApplicationController {
 
     async getOne(req, res, next) {
         try {
-            const { id } = req.params;
+            const {id} = req.params;
             const applicationsData = await Application.findOne({
-                where: { id }, include: [
+                where: {id}, include: [
                     {
                         model: ConsiliumDoctor,
                         separate: true // Отдельный запрос для связи ConsiliumDoctor
@@ -64,7 +64,7 @@ class ApplicationController {
                     }
                 ]
             });
-            const manager = await User.findOne({ where: { id: applicationsData.managerId } })
+            const manager = await User.findOne({where: {id: applicationsData.managerId}})
             const prevCommetnsList = applicationsData.Comments
             const isOldFormat = prevCommetnsList.length > 0 && prevCommetnsList[0].title !== 'Подопечный (ая) обратился в'
             const newFormatComments = Array(12).fill(null).map(() => ({}));
@@ -93,13 +93,16 @@ class ApplicationController {
                 newFormatComments[10].title = 'Решение принято на основании вышеизложенных данных'
                 newFormatComments[11].comment = ''
                 newFormatComments[11].title = 'Заключение: просьбу подопечного считаем'
-                await Comment.destroy({ where: { applicationId: id } });
+                await Comment.destroy({where: {applicationId: id}});
                 for (const comment of newFormatComments) {
-                    const result = await Comment.create({ ...comment });
+                    const result = await Comment.create({...comment});
                     await result.setApplication(applicationsData);
                 }
             }
-            await applicationsData.update({ managerSignUrlPath: manager ? manager.urlSignPath : null });
+            if (prevCommetnsList.length === 12) {
+                prevCommetnsList[11].title = 'Заключение: просьбу подопечного считаем'
+            }
+            await applicationsData.update({managerSignUrlPath: manager ? manager.urlSignPath : null});
             return isOldFormat ? res.json({
                 ...applicationsData.toJSON(), Comments: newFormatComments
             }) : res.json(applicationsData);
@@ -110,15 +113,15 @@ class ApplicationController {
 
     async getByLetter(req, res, next) {
         try {
-            const { fundName, fundRequest, manager, patientName, patientRequest, limit, page, creator } = req.query;
+            const {fundName, fundRequest, manager, patientName, patientRequest, limit, page, creator} = req.query;
             const offset = page * limit - limit
             const applicationsData = await Application.findAndCountAll({
                 where: {
-                    ...(creator === 'all' ? { manager: { [Op.like]: `%${manager}%` } } : { managerId: creator }),
-                    fundRequest: { [Op.like]: `%${fundRequest}%` },
-                    fundName: { [Op.like]: `%${fundName}%` },
-                    patientName: { [Op.like]: `%${patientName}%` },
-                    patientRequest: { [Op.like]: `%${patientRequest}%` },
+                    ...(creator === 'all' ? {manager: {[Op.like]: `%${manager}%`}} : {managerId: creator}),
+                    fundRequest: {[Op.like]: `%${fundRequest}%`},
+                    fundName: {[Op.like]: `%${fundName}%`},
+                    patientName: {[Op.like]: `%${patientName}%`},
+                    patientRequest: {[Op.like]: `%${patientRequest}%`},
                 },
                 limit, offset,
                 order: [
@@ -153,7 +156,7 @@ class ApplicationController {
                 fundName,
                 fundRequest
             } = req.body
-            const applicationsData = await Application.findOne({ where: { id } });
+            const applicationsData = await Application.findOne({where: {id}});
             await applicationsData.update({
                 mostProblDiagnosis,
                 secondaryDiagnosis,
@@ -165,22 +168,22 @@ class ApplicationController {
                 execDate,
                 patientPromoter
             })
-            await ConsiliumDoctor.destroy({ where: { applicationId: id } });
+            await ConsiliumDoctor.destroy({where: {applicationId: id}});
             consiliumDoctors.forEach(async (cDoctor) => {
-                const result = await ConsiliumDoctor.create({ ...cDoctor })
+                const result = await ConsiliumDoctor.create({...cDoctor})
                 await result.setApplication(applicationsData)
             })
-            await Diagnostic.destroy({ where: { applicationId: id } });
+            await Diagnostic.destroy({where: {applicationId: id}});
             for (const cDoctor of diagnostic) {
-                const result = await Diagnostic.create({ ...cDoctor });
+                const result = await Diagnostic.create({...cDoctor});
                 await result.setApplication(applicationsData);
             }
-            await Comment.destroy({ where: { applicationId: id } });
+            await Comment.destroy({where: {applicationId: id}});
             for (const comment of comments) {
-                const result = await Comment.create({ ...comment });
+                const result = await Comment.create({...comment});
                 await result.setApplication(applicationsData);
             }
-            const curator = await User.findOne({ where: { role: 'coordinator' } })
+            const curator = await User.findOne({where: {role: 'coordinator'}})
 
             let coordinatorURLSignPath = curator?.urlSignPath || ''
             let coordinatorSignFile = curator?.signFileName || ''
@@ -199,19 +202,19 @@ class ApplicationController {
                 coordinatorURLSignPath,
             }
             const [smetaData, created] = await Smeta.findOrCreate({
-                where: { applId: id.toString() }, defaults: columnsForSmeta
+                where: {applId: id.toString()}, defaults: columnsForSmeta
 
             })
             if (!created) {
-                await Smeta.update(columnsForSmeta, { where: { applId: id.toString() } })
-                await Smetaplan.destroy({ where: { smetaId: smetaData.id } })
+                await Smeta.update(columnsForSmeta, {where: {applId: id.toString()}})
+                await Smetaplan.destroy({where: {smetaId: smetaData.id}})
             }
 
-            await CheckupPlan.destroy({ where: { applicationId: id } });
+            await CheckupPlan.destroy({where: {applicationId: id}});
             for (const cDoctor of checkupPlans) {
-                const result = await CheckupPlan.create({ ...cDoctor });
+                const result = await CheckupPlan.create({...cDoctor});
                 await result.setApplication(applicationsData);
-                await Smetaplan.create({ ...cDoctor, smetaId: smetaData.id });
+                await Smetaplan.create({...cDoctor, smetaId: smetaData.id});
             }
             return res.json(applicationsData);
         } catch (e) {
@@ -221,10 +224,10 @@ class ApplicationController {
 
     async updateManager(req, res, next) {
         try {
-            const { id, managerId } = req.body
-            const applicationsData = await Application.findOne({ where: { id } });
-            const newManager = await User.findOne({ where: { id: managerId } })
-            const { name, speciality, urlSignPath } = newManager
+            const {id, managerId} = req.body
+            const applicationsData = await Application.findOne({where: {id}});
+            const newManager = await User.findOne({where: {id: managerId}})
+            const {name, speciality, urlSignPath} = newManager
             await applicationsData.update({
                 managerId,
                 manager: name,
@@ -239,10 +242,10 @@ class ApplicationController {
 
     async changeCheckupPlaceDeleteOption(req, res, next) {
         try {
-            const { id } = req.body
-            const applicationsData = await Application.findOne({ where: { id } });
-            await applicationsData.update({ checkUpPlaceIsDeleted: !applicationsData.checkUpPlaceIsDeleted })
-            return res.json({ checkUpPlaceIsDeleted: applicationsData.checkUpPlaceIsDeleted });
+            const {id} = req.body
+            const applicationsData = await Application.findOne({where: {id}});
+            await applicationsData.update({checkUpPlaceIsDeleted: !applicationsData.checkUpPlaceIsDeleted})
+            return res.json({checkUpPlaceIsDeleted: applicationsData.checkUpPlaceIsDeleted});
         } catch (e) {
             next(e);
         }
@@ -250,9 +253,9 @@ class ApplicationController {
 
     async deleteApplication(req, res, next) {
         try {
-            const { id } = req.params;
-            await Application.destroy({ where: { id } })
-            return res.json({ deleted: 'ok' });
+            const {id} = req.params;
+            await Application.destroy({where: {id}})
+            return res.json({deleted: 'ok'});
         } catch (e) {
             next(e);
         }
