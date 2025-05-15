@@ -127,8 +127,8 @@ class UserController {
     }
     async getOneForSmeta(req, res, next) {
         try {
-            const {urlSignPath,signFileName} = await userService.getOne(req, res, next);
-            return res.json({urlSignPath, signFileName})
+            const {urlSignPath,signFileName, name} = await userService.getOne(req, res, next);
+            return res.json({urlSignPath, signFileName, name})
         } catch (e) {
             next(e);
         }
