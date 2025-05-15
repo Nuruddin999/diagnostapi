@@ -110,7 +110,7 @@ class UserController {
     async getOne(req, res, next) {
         try {
             const userData = await userService.getOne(req, res, next);
-            return userData
+            return res.json(userData)
         } catch (e) {
             next(e);
         }
@@ -127,8 +127,8 @@ class UserController {
     }
     async getOneForSmeta(req, res, next) {
         try {
-            const {urlSignPath} = await userService.getOne(req, res, next);
-            return urlSignPath
+            const {urlSignPath,signFileName} = await userService.getOne(req, res, next);
+            return res.join(urlSignPath,signFileName)
         } catch (e) {
             next(e);
         }

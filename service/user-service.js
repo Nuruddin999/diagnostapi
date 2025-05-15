@@ -197,7 +197,7 @@ class UserService {
             delete processedUser.password
             delete processedUser.Rights
             processedUser.rights = usersData.dataValues.Rights
-            return res.json(processedUser);
+            return processedUser;
         } catch (e) {
             next(e);
         }
