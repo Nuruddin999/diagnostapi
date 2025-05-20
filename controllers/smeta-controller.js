@@ -8,7 +8,7 @@ const {
     Smetaplan,
     Smetasecdiag,
     ReworkComment,
-    ReworkCommentFile
+    ReworkCommentFile, Application
 } = require("../models");
 const {Op} = require("sequelize");
 const userService = require('../service/user-service');
@@ -97,6 +97,33 @@ class SmetaController {
                 ]
             });
             return res.json(smetaData);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    async getByLetter(req, res, next) {
+        try {
+            const {fundName, fundRequest, manager, patientName, patientRequest, limit, page, creator} = req.query;
+            const offset = page * limit - limit
+            const applicationsData = await Smeta.findAndCountAll({
+
+                where: {
+                    fundRequest: {[Op.like]: `%${fundRequest}%`},
+                    patientName: {[Op.like]: `%${patientName}%`},
+                    patientRequest: {[Op.like]: `%${patientRequest}%`},
+                    diagnosis: {[Op.like]: `%${diagnosis}%`},
+                    patientPromoter: {[Op.like]: `%${patientPromoter}%`},
+                    customer: {[Op.like]: `%${customer}%`},
+                    managerName: {[Op.like]: `%${managerName}%`},
+                },
+
+                limit, offset,
+                order: [
+                    ['createdAt', 'DESC']
+                ]
+            });
+            return res.json(applicationsData);
         } catch (e) {
             next(e);
         }
