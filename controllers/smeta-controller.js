@@ -117,21 +117,21 @@ class SmetaController {
             const offset = page * limit - limit
             const whereQuery = {}
             if (fundRequest && fundRequest.trim() !== '') {
-                whereQuery['fundRequest'] = fundRequest;
+                whereQuery['fundRequest'] = { [Op.iLike]: `%${fundRequest}%` };
             }
             if (patientRequest && patientRequest.trim() !== '') {
-                whereQuery.patientRequest = { [Op.like]: `%${patientRequest}%` };
+                whereQuery.patientRequest = { [Op.iLike]: `%${patientRequest}%` };
             }
             if (patientPromoter && patientPromoter.trim() !== '') {
-                whereQuery.patientPromoter = { [Op.like]: `%${patientPromoter}%` };
+                whereQuery.patientPromoter = { [Op.iLike]: `%${patientPromoter}%` };
             }
             if (customer && customer.trim() !== '') {
-                whereQuery.customer = { [Op.like]: `%${customer}%` };
+                whereQuery.customer = { [Op.iLike]: `%${customer}%` };
             }
             const applicationsData = await Smeta.findAndCountAll({
 
                 where: {
-                    patientName: {[Op.like]: `%${patientName}%`},
+                    patientName: {[Op.iLike]: `%${patientName}%`},
                     isReadyForCoordinator: true,
                     ...whereQuery,
                     status: {
