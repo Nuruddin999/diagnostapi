@@ -104,18 +104,40 @@ class SmetaController {
 
     async getByLetter(req, res, next) {
         try {
-            const {fundName, fundRequest, manager, patientName, patientRequest, limit, page, creator} = req.query;
+            const {
+                customer,
+                fundRequest,
+                patientPromoter,
+                patientName,
+                patientRequest,
+                limit,
+                page,
+                status
+            } = req.query;
             const offset = page * limit - limit
+            const whereQuery = {}
+            if (fundRequest && fundRequest.trim() !== '') {
+                whereQuery['fundRequest'] = fundRequest;
+            }
+            if (patientRequest && patientRequest.trim() !== '') {
+                whereQuery.patientRequest = { [Op.like]: `%${patientRequest}%` };
+            }
+            if (patientPromoter && patientPromoter.trim() !== '') {
+                whereQuery.patientPromoter = { [Op.like]: `%${patientPromoter}%` };
+            }
+            if (customer && customer.trim() !== '') {
+                whereQuery.customer = { [Op.like]: `%${customer}%` };
+            }
             const applicationsData = await Smeta.findAndCountAll({
 
                 where: {
-                    fundRequest: {[Op.like]: `%${fundRequest}%`},
                     patientName: {[Op.like]: `%${patientName}%`},
-                    patientRequest: {[Op.like]: `%${patientRequest}%`},
-                    patientPromoter: {[Op.like]: `%${patientPromoter}%`},
-                    customer: {[Op.like]: `%${customer}%`},
+                    isReadyForCoordinator: true,
+                    ...whereQuery,
+                    status: {
+                        [Op.or]: status === 'rework' ? ['rework', null] : [status],
+                    },
                 },
-
                 limit, offset,
                 order: [
                     ['createdAt', 'DESC']
