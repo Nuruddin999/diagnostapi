@@ -112,10 +112,8 @@ class SmetaController {
                     fundRequest: {[Op.like]: `%${fundRequest}%`},
                     patientName: {[Op.like]: `%${patientName}%`},
                     patientRequest: {[Op.like]: `%${patientRequest}%`},
-                    diagnosis: {[Op.like]: `%${diagnosis}%`},
                     patientPromoter: {[Op.like]: `%${patientPromoter}%`},
                     customer: {[Op.like]: `%${customer}%`},
-                    managerName: {[Op.like]: `%${managerName}%`},
                 },
 
                 limit, offset,
