@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
     credentials: true,
-    origin: ['http://188.68.220.210:3000', 'http://188.68.220.210:12345','http://localhost:3000','http://localhost:9000'],
+    origin: process.env.MODE ?  ['http://188.68.220.210:3000', 'http://188.68.220.210:12345','http://localhost:3000','http://localhost:9000']:['http://188.68.220.210:3000', 'http://188.68.220.210:12345'],
 }));
 app.use(express.static(root))
 app.use('/', router);
