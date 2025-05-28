@@ -160,7 +160,7 @@ class SmetaController {
             if (!foundedSmeta) {
                 return res.json({success: false, message: 'Смета не найдена. Сначала сохраните заключение'});
             }
-            await Smeta.update({isReadyForCoordinator: true}, {
+            await Smeta.update({isReadyForCoordinator: true, status:null}, {
                 where: {
                     applId: id.toString()
                 }
@@ -276,8 +276,15 @@ class SmetaController {
 
     async addReworkComment(req, res, next) {
         try {
-            const {comment, smetaId} = req.body
-            const result = await ReworkComment.create({comment, smetaId})
+            const {comment, smetaId, applId} = req.body
+            const result = await ReworkComment.create({comment, ...(applId !== undefined ? { applicationId: applId } : { smetaId }) })
+            if (applId  !== undefined ) {
+                await Smeta.update({isReadyForCoordinator: false}, {
+                    where: {
+                        id: smetaId.toString()
+                    }
+                })
+            }
             return res.json({added: result.id});
         } catch (e) {
             next(e);

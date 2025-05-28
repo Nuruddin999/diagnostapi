@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'smetaId',
                 onDelete: 'CASCADE'
             })
+            ReworkComment.belongsTo(models.Application, {
+                foreignKey: 'applicationId',
+                onDelete: 'CASCADE'
+            })
             ReworkComment.hasMany(models.ReworkCommentFile, {
                 foreignKey: 'reworkCommentId',
                 onDelete: 'cascade'
@@ -24,7 +28,8 @@ module.exports = (sequelize, DataTypes) => {
 
     ReworkComment.init({
         comment: DataTypes.TEXT,
-        smetaId: DataTypes.INTEGER
+        smetaId: DataTypes.INTEGER,
+        applicationId: DataTypes.INTEGER
     }, {
         sequelize,
         modelName: 'ReworkComment',

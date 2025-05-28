@@ -6,7 +6,7 @@ const {
     Comment,
     User,
     Smeta,
-    Smetaplan
+    Smetaplan, ReworkComment, ReworkCommentFile
 } = require('../models');
 const {Op} = require('sequelize');
 
@@ -61,7 +61,18 @@ class ApplicationController {
                         model: Comment,
                         separate: true, // Отдельный запрос для связи Comment
                         order: [['id', 'ASC']] // Сортировка Comment по возрастанию id
-                    }
+                    },
+                    {
+                        model: ReworkComment,
+                        separate: true,
+                        order: [['id', 'ASC']],
+                        include: [
+                            {
+                                model: ReworkCommentFile,
+                                required: false,
+                            },
+                        ],
+                    },
                 ]
             });
             const manager = await User.findOne({ where: { id: applicationsData.managerId } })

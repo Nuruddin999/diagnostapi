@@ -27,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'applicationId',
                 onDelete: 'cascade'
             })
+            Application.hasMany(models.ReworkComment, {
+                foreignKey: 'applicationId',
+                onDelete: 'cascade'
+            })
         }
     }
 
