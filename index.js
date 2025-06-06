@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
     credentials: true,
-    origin: process.env.MODE ?  ['http://188.68.220.210:3000', 'http://188.68.220.210:12345','http://localhost:3000','http://localhost:9000']:['http://188.68.220.210:3000', 'http://188.68.220.210:12345'],
+    origin: process.env.MODE ?  ['http://188.68.220.210:3000', 'http://188.68.220.210:12345','http://localhost:3000','http://localhost:3001','http://localhost:9000']:['http://188.68.220.210:3000', 'http://188.68.220.210:12345'],
 }));
 app.use(express.static(root))
 app.use('/', router);
@@ -77,7 +77,8 @@ function broadcastOnlineUsers() {
 const start = async () => {
     try {
         server.listen(PORT, () => console.log(`Server started on PORT = ${PORT}`))
-        //  await sequelize.sync({ alter: true })
+       //  await sequelize.sync({ alter: true })
+
     } catch (e) {
         console.log(e);
     }
