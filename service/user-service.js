@@ -1,4 +1,4 @@
-const {User, Token, Rights} = require('../models');
+const {User, Token, Rights, UserSession} = require('../models');
 const bcrypt = require('bcrypt');
 const tokenService = require('./token-service');
 const UserDto = require('../dtos/user-dto');
@@ -37,7 +37,13 @@ class UserService {
     }
 
     async login(email, password) {
-        const user = await User.findOne({where: {email}, include: [Rights]})
+        const user = await User.findOne({
+            where: { email },
+            include: [
+                { model: Rights, separate: true },
+                { model: UserSession, separate: true,  order: [['createdAt', 'DESC']], }
+            ]
+        });
         if (!user) {
             throw ApiError.BadRequest('Пользователь с таким email не найден')
         }
@@ -54,8 +60,10 @@ class UserService {
             isDeletedPlace,
             Rights: rights,
             urlSignPath,
-            signFileName
+            signFileName,
+            UserSessions: userSession,
         } = user
+
         const userDto = new UserDto({email: user.email, id: user.id, isActivated: true});
         const tokens = tokenService.generateTokens({...userDto});
         await tokenService.saveToken(user, tokens.refreshToken);
@@ -82,19 +90,20 @@ class UserService {
                     update: false,
                     read: false,
                     delete: false
-                }, {entity: 'checkupPlanPlace', create: false, update: false, read: false, delete: false},{
+                }, {entity: 'checkupPlanPlace', create: false, update: false, read: false, delete: false}, {
                     entity: 'smetas',
                     create: false,
                     update: false,
                     read: false,
                     delete: false
                 }],
+                UserSessions:userSession
             }
         }
     }
 
     async logout(refreshToken) {
-       return  await tokenService.removeToken(refreshToken);
+        return await tokenService.removeToken(refreshToken);
 
     }
 
@@ -107,7 +116,7 @@ class UserService {
         if (!userData || !tokenFromDb) {
             throw ApiError.UnauthorizedError();
         }
-        const user = await User.findOne({where: {id: userData.id}, include: [Rights]});
+        const user = await User.findOne({where: {id: userData.id}, include: [{model:Rights, separate:true},{model:UserSession, separate:true}]});
         const {
             id,
             email: userEmail,
@@ -118,8 +127,10 @@ class UserService {
             isDeletedPlace,
             Rights: rights,
             urlSignPath,
-            signFileName
+            signFileName,
+            UserSessions: userSession,
         } = user
+
         const userDto = new UserDto({email: user.email, id, isActivated: true});
         const tokens = tokenService.generateTokens({...userDto});
         await tokenService.saveToken(user, tokens.refreshToken);
@@ -135,7 +146,8 @@ class UserService {
                 phone,
                 role,
                 isDeletedPlace,
-                rights
+                rights,
+                UserSessions: userSession,
             }
         }
     }
@@ -192,11 +204,15 @@ class UserService {
     async getOne(req, res, next) {
         try {
             const {id} = req.params;
-            const usersData = await User.findOne({where: {id}, include: [Rights]});
+            const usersData = await User.findOne({
+                where: {id},
+                include: [{model: Rights, separate: true},            { model: UserSession, separate: true,  order: [['createdAt', 'DESC']], }]
+            });
             const processedUser = {...usersData.dataValues}
             delete processedUser.password
             delete processedUser.Rights
             processedUser.rights = usersData.dataValues.Rights
+            processedUser.UserSession = usersData.UserSession;
             return processedUser;
         } catch (e) {
             next(e);
@@ -238,7 +254,7 @@ class UserService {
                     update: true,
                     read: true,
                     delete: true
-                },  {
+                }, {
                     entity: 'smetas',
                     create: true,
                     update: true,

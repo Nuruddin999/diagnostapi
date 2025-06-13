@@ -50,4 +50,6 @@ router.post('/smetas-upd-f', authMiddleware, smetaController.updateSmetaFields);
 router.get('/smetasdel/:id', authMiddleware, smetaController.deleteSmeta)
 router.get('/smetaureq/:id',userController.getOneForSmeta);
 router.get('/smts/',authMiddleware,smetaController.getByLetter);
+router.get('/sust/',authMiddleware,userController.saveStartTime);
+router.post('/suet/',userController.saveEndTime);
 module.exports = router
