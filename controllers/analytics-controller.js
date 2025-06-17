@@ -18,8 +18,7 @@ class AnalyticsController {
         const applications = await Application.findAll({
            where: {
                managerId:{[Op.in]:users.map(el=>el.id.toString())},
-               createdAt:{[Op.gte]:periodMap[period]},
-               updatedAt:{[Op.gte]:periodMap[period]}
+               createdAt:{[Op.gte]:periodMap[period]}
 
            }
        });
