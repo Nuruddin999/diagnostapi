@@ -22,7 +22,7 @@ class AnalyticsController {
 
            }
        });
-        const processedUsers = [...users].map(el=>({...el.dataValues, applications: applications.filter(appl=>appl.managerId.toString() === el.dataValues.id.toString())}));
+        const processedUsers = [...users].map(el=>({name: el.dataValues.name, speciality: el.dataValues.speciality ,applications: applications.length}));
         return res.json({users: processedUsers});
     }
 }
