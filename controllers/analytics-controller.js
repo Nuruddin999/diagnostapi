@@ -1,15 +1,22 @@
 const {User, Application, Rights} = require('../models');
 const userService = require("../service/user-service");
 const {Op} = require('sequelize');
+const dayjs = require("dayjs");
 
 
-const now = new Date();
-const weekAgo = new Date();
-weekAgo.setDate(now.getDate() - 7);
+const now = dayjs().toDate();
+const weekAgo =dayjs().subtract(1, 'week').toDate();
+const monthAgo = dayjs().subtract(1, 'month').toDate();
+const dayAgoStart = dayjs().subtract(1, 'days').startOf('day').toDate()
+const dayAgoEnd = dayjs().subtract(1, 'days').endOf('day').toDate()
+
 
 const periodMap = {
-    week: weekAgo
-}
+    week:{[Op.between]:[weekAgo, now]},
+    month:{[Op.between]:[monthAgo, now]},
+    today:{[Op.between]:[dayjs().startOf('day').toDate(),now]},
+    yesterday:{[Op.between]:[dayAgoStart,dayAgoEnd]},
+ }
 
 class AnalyticsController {
     async getUsersRecap(req,res,next){
@@ -18,7 +25,9 @@ class AnalyticsController {
         const applications = await Application.findAll({
            where: {
                managerId:{[Op.in]:users.map(el=>el.id.toString())},
-               createdAt:{[Op.gte]:periodMap[period]}
+               createdAt:periodMap[period],
+               updatedAt:periodMap[period],
+
 
            }
        });
