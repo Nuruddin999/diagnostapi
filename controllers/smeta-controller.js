@@ -165,6 +165,11 @@ class SmetaController {
                     applId: id.toString()
                 }
             })
+            await Application.update({passToCoordinatorTime: new Date()}, {
+                where: {
+                    id: id.toString()
+                }
+            })
             return res.json({success: true});
         } catch (e) {
             next(e);

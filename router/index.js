@@ -4,6 +4,7 @@ const applicationController = require('../controllers/application-controller');
 const fileController = require('../controllers/file-controller');
 const specialityController = require('../controllers/speciality-controller');
 const smetaController = require('../controllers/smeta-controller');
+const analyticsController = require('../controllers/analytics-controller');
 const router = new Router();
 const { body } = require('express-validator');
 const authMiddleware = require('../middlewares/auth-middleware');
@@ -52,4 +53,5 @@ router.get('/smetaureq/:id',userController.getOneForSmeta);
 router.get('/smts/',authMiddleware,smetaController.getByLetter);
 router.get('/sust/',authMiddleware,userController.saveStartTime);
 router.post('/suet/',userController.saveEndTime);
+router.get('/gurec/',analyticsController.getUsersRecap);
 module.exports = router
