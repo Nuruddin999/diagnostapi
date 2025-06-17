@@ -26,9 +26,7 @@ class AnalyticsController {
            where: {
                managerId:{[Op.in]:users.map(el=>el.id.toString())},
                createdAt:periodMap[period],
-               updatedAt:periodMap[period],
-
-
+               passToCoordinatorTime:periodMap[period],
            }
        });
         const processedUsers = [...users].map(el=>({name: el.dataValues.name, speciality: el.dataValues.speciality ,applications: applications.filter(appl=>appl.managerId.toString() === el.dataValues.id.toString()).length}));
