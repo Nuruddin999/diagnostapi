@@ -13,10 +13,7 @@ const weekAgo = dayjs().tz(MSK).startOf( 'week').toDate();
 const monthAgo = dayjs().tz(MSK).startOf( 'month').toDate();
 const dayAgoStart = dayjs().tz(MSK).subtract(1, 'day').startOf('day').toDate();
 const dayAgoEnd = dayjs().tz(MSK).subtract(1, 'day').endOf('day').toDate();
- console.log('weekAgo',weekAgo);
-console.log('monthAgo',monthAgo);
-console.log('dayAgoStart',dayAgoStart);
-console.log('dayAgoEnd',dayAgoEnd);
+
 
 const periodMap = {
     week:{[Op.between]:[weekAgo, now]},
@@ -29,8 +26,6 @@ class AnalyticsController {
     async getUsersRecap(req,res,next){
         try {
             const {period} = req.query;
-            console.log('period',period);
-            console.log('map',periodMap[period]);
             const users = await User.findAll();
             const applications = await Application.findAll({
                 where: {
