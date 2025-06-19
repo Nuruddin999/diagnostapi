@@ -1,14 +1,13 @@
-const {User, Application, Rights} = require('../models');
-const userService = require("../service/user-service");
+const {User, Application} = require('../models');
 const {Op} = require('sequelize');
 const dayjs = require("dayjs");
 
 
 const now = dayjs().toDate();
-const weekAgo =dayjs().subtract(1, 'week').toDate();
-const monthAgo = dayjs().subtract(1, 'month').toDate();
-const dayAgoStart = dayjs().subtract(1, 'days').startOf('day').toDate()
-const dayAgoEnd = dayjs().subtract(1, 'days').endOf('day').toDate()
+const weekAgo =dayjs().utc().subtract(1, 'week').toDate();
+const monthAgo = dayjs().utc().subtract(1, 'month').toDate();
+const dayAgoStart = dayjs().utc().subtract(1, 'days').startOf('day').toDate()
+const dayAgoEnd = dayjs().utc().subtract(1, 'days').endOf('day').toDate()
  console.log('weekAgo',weekAgo);
 console.log('monthAgo',monthAgo);
 console.log('dayAgoStart',dayAgoStart);
