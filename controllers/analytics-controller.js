@@ -12,7 +12,6 @@ dayjs.extend(isoWeek);
 const MSK = 'Europe/Moscow';
 const now = dayjs().tz(MSK).toDate();
 const weekAgo = dayjs().tz(MSK).startOf( 'isoWeek').toDate();
-console.log('weekAgo', weekAgo);
 const monthAgo = dayjs().tz(MSK).startOf( 'month').toDate();
 const dayAgoStart = dayjs().tz(MSK).subtract(1, 'day').startOf('day').toDate();
 const dayAgoEnd = dayjs().tz(MSK).subtract(1, 'day').endOf('day').toDate();
