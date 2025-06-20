@@ -52,6 +52,7 @@ router.get('/smetasdel/:id', authMiddleware, smetaController.deleteSmeta)
 router.get('/smetaureq/:id',userController.getOneForSmeta);
 router.get('/smts/',authMiddleware,smetaController.getByLetter);
 router.get('/sust/',authMiddleware,userController.saveStartTime);
-router.post('/suet/',userController.saveEndTime);
-router.get('/gurec/',analyticsController.getUsersRecap);
+router.post('/suet/',authMiddleware,userController.saveEndTime);
+router.get('/gurec/',authMiddleware,analyticsController.getUsersRecap);
+router.get('/gutrec/',authMiddleware,analyticsController.getUsersItemRecap);
 module.exports = router

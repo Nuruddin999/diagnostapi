@@ -11,35 +11,65 @@ dayjs.extend(isoWeek);
 
 const MSK = 'Europe/Moscow';
 const now = dayjs().tz(MSK).toDate();
-const weekAgo = dayjs().tz(MSK).startOf( 'isoWeek').toDate();
-const monthAgo = dayjs().tz(MSK).startOf( 'month').toDate();
+const weekAgo = dayjs().tz(MSK).startOf('isoWeek').toDate();
+const monthAgo = dayjs().tz(MSK).startOf('month').toDate();
 const dayAgoStart = dayjs().tz(MSK).subtract(1, 'day').startOf('day').toDate();
 const dayAgoEnd = dayjs().tz(MSK).subtract(1, 'day').endOf('day').toDate();
 
 
 const periodMap = {
-    week:{[Op.between]:[weekAgo, now]},
-    month:{[Op.between]:[monthAgo, now]},
-    today:{[Op.between]: [dayjs().tz(MSK).startOf('day').toDate(), now]},
-    yesterday:{[Op.between]:[dayAgoStart,dayAgoEnd]},
- }
+    week: {[Op.between]: [weekAgo, now]},
+    month: {[Op.between]: [monthAgo, now]},
+    today: {[Op.between]: [dayjs().tz(MSK).startOf('day').toDate(), now]},
+    yesterday: {[Op.between]: [dayAgoStart, dayAgoEnd]},
+}
 
 class AnalyticsController {
-    async getUsersRecap(req,res,next){
+    async getUsersRecap(req, res, next) {
         try {
             const {period} = req.query;
             const users = await User.findAll();
             const applications = await Application.findAll({
                 where: {
-                    managerId:{[Op.in]:users.map(el=>el.id.toString())},
-                    createdAt:periodMap[period],
-                    passToCoordinatorTime:periodMap[period],
+                    managerId: {[Op.in]: users.map(el => el.id.toString())},
+                    createdAt: periodMap[period],
+                    passToCoordinatorTime: periodMap[period],
                 }
             });
-            const processedUsers = [...users].map(el=>({name: el.dataValues.name, speciality: el.dataValues.speciality ,applications: applications.filter(appl=>appl.managerId.toString() === el.dataValues.id.toString()).length}));
+            const processedUsers = [...users].map(el => ({
+                name: el.dataValues.name,
+                speciality: el.dataValues.speciality,
+                applications: applications.filter(appl => appl.managerId.toString() === el.dataValues.id.toString()).length
+            }));
             return res.json({users: processedUsers, count: applications.length});
+        } catch (err) {
+            next(err);
         }
-        catch(err){
+
+    }
+
+    async getUsersItemRecap(req, res, next) {
+        try {
+            const {period, id} = req.query;
+            const user = await User.findOne({
+                where: {id}
+            });
+            const applications = await Application.findAll({
+                where: {
+                    managerId: user.id.toString(),
+                    createdAt: periodMap[period],
+                    passToCoordinatorTime: periodMap[period],
+                }
+            });
+
+
+            const processedUser = {
+                name: user.dataValues.name,
+                speciality: user.dataValues.speciality,
+                applications: applications.map(appl => appl.dataValues)
+            }
+            return res.json({user: processedUser, applications,count: applications.length});
+        } catch (err) {
             next(err);
         }
 
