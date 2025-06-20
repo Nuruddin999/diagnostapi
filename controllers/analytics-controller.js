@@ -3,13 +3,16 @@ const {Op} = require('sequelize');
 const dayjs = require("dayjs");
 const utc = require('dayjs/plugin/utc');
 const timezone = require('dayjs/plugin/timezone');
+const isoWeek = require('dayjs/plugin/isoWeek');
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+dayjs.extend(isoWeek);
 
 const MSK = 'Europe/Moscow';
 const now = dayjs().tz(MSK).toDate();
-const weekAgo = dayjs().tz(MSK).startOf( 'week').toDate();
+const weekAgo = dayjs().tz(MSK).startOf( 'isoWeek').toDate();
+console.log('weekAgo', weekAgo);
 const monthAgo = dayjs().tz(MSK).startOf( 'month').toDate();
 const dayAgoStart = dayjs().tz(MSK).subtract(1, 'day').startOf('day').toDate();
 const dayAgoEnd = dayjs().tz(MSK).subtract(1, 'day').endOf('day').toDate();
