@@ -37,6 +37,7 @@ class AnalyticsController {
                 }
             });
             const processedUsers = [...users].map(el => ({
+                id: el.id,
                 name: el.dataValues.name,
                 speciality: el.dataValues.speciality,
                 applications: applications.filter(appl => appl.managerId.toString() === el.dataValues.id.toString()).length
