@@ -51,7 +51,7 @@ class AnalyticsController {
 
     async getUsersItemRecap(req, res, next) {
         try {
-            const {period, id} = req.query;
+            const {period, id} = req.params;
             const user = await User.findOne({
                 where: {id}
             });
@@ -59,7 +59,6 @@ class AnalyticsController {
                 where: {
                     managerId: user.id.toString(),
                     createdAt: periodMap[period],
-                    passToCoordinatorTime: periodMap[period],
                 }
             });
 
@@ -69,7 +68,8 @@ class AnalyticsController {
                 speciality: user.dataValues.speciality,
                 applications: applications.map(appl => appl.dataValues)
             }
-            return res.json({user: processedUser, applications,count: applications.length});
+
+            return res.json({user: processedUser, count: applications.length});
         } catch (err) {
             next(err);
         }
