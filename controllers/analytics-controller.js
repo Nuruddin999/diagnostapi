@@ -66,7 +66,7 @@ class AnalyticsController {
             const processedUser = {
                 name: user.dataValues.name,
                 speciality: user.dataValues.speciality,
-                applications: applications.map(appl => appl.dataValues)
+                applications: applications.map(appl => ({name:appl.dataValues.patientName, birth: appl.dataValues.patientBirthDate, createdAt:appl.dataValues.createdAt, passToCoordinatorTime:appl.dataValues.passToCoordinatorTime}))
             }
 
             return res.json({user: processedUser, count: applications.length});
