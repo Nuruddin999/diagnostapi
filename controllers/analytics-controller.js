@@ -1,4 +1,4 @@
-const {User, Application} = require('../models');
+const {User, Application, UserSession} = require('../models');
 const {Op} = require('sequelize');
 const dayjs = require("dayjs");
 const utc = require('dayjs/plugin/utc');
@@ -59,14 +59,24 @@ class AnalyticsController {
                 where: {
                     managerId: user.id.toString(),
                     createdAt: periodMap[period],
-                }
+                },
+                include: [{
+                    model: UserSession,
+                    where: {
+                        connectedAt: {
+                            [Op.between]: [start, end]
+                        }
+                    },
+                    required: false // если нужно получить пользователя даже без сессий
+                }]
             });
 
 
             const processedUser = {
                 name: user.dataValues.name,
                 speciality: user.dataValues.speciality,
-                applications: applications.map(appl => ({name:appl.dataValues.patientName, birth: appl.dataValues.patientBirthDate, createdAt:appl.dataValues.createdAt, passToCoordinatorTime:appl.dataValues.passToCoordinatorTime}))
+                applications: applications.map(appl => ({name:appl.dataValues.patientName, birth: appl.dataValues.patientBirthDate, createdAt:appl.dataValues.createdAt, passToCoordinatorTime:appl.dataValues.passToCoordinatorTime})),
+                sessions:user.UserSessions
             }
 
             return res.json({user: processedUser, count: applications.length, period: periodMap[period][Op.between]});
