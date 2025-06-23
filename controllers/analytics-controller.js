@@ -53,13 +53,7 @@ class AnalyticsController {
         try {
             const {period, id} = req.query;
             const user = await User.findOne({
-                where: {id}
-            });
-            const applications = await Application.findAll({
-                where: {
-                    managerId: user.id.toString(),
-                    createdAt: periodMap[period],
-                },
+                where: {id},
                 include: [{
                     model: UserSession,
                     where: {
@@ -68,6 +62,12 @@ class AnalyticsController {
                     },
                     required: false // если нужно получить пользователя даже без сессий
                 }]
+            });
+            const applications = await Application.findAll({
+                where: {
+                    managerId: user.id.toString(),
+                    createdAt: periodMap[period],
+                }
             });
 
 
