@@ -69,7 +69,7 @@ class AnalyticsController {
                 applications: applications.map(appl => ({name:appl.dataValues.patientName, birth: appl.dataValues.patientBirthDate, createdAt:appl.dataValues.createdAt, passToCoordinatorTime:appl.dataValues.passToCoordinatorTime}))
             }
 
-            console.log('periods',periodMap[period][[Op.between]])
+            console.log('periods',periodMap[period][Op.between])
 
             return res.json({user: processedUser, count: applications.length, period: ''});
         } catch (err) {
