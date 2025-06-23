@@ -51,7 +51,7 @@ class AnalyticsController {
 
     async getUsersItemRecap(req, res, next) {
         try {
-            const {period, id} = req.params;
+            const {period, id} = req.query;
             const user = await User.findOne({
                 where: {id}
             });
