@@ -11,6 +11,7 @@ module.exports = function (req, res, next) {
         if (!token && req.body?.token) {
             token = req.body.token;
         }
+
         if (!token) {
             return next(ApiError.UnauthorizedError());
         }
