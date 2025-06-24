@@ -354,7 +354,9 @@ class UserService {
             total += (result.disconnectedAt - application.createdAt);
         }
 
-
+        if (!result) {
+            return 0
+        }
         const restSessions = await UserSession.findAll({
             where: {
                 userId,
@@ -374,7 +376,7 @@ class UserService {
 
 
         if (application.passedToCoordinatorTime) {
-            console.log('application.passedToCoordinatorTime',application.passedToCoordinatorTime);
+
             const finalSession = await UserSession.findOne({
                 where: {
                     userId,
