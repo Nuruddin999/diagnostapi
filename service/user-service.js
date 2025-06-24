@@ -38,10 +38,10 @@ class UserService {
 
     async login(email, password) {
         const user = await User.findOne({
-            where: { email },
+            where: {email},
             include: [
-                { model: Rights, separate: true },
-                { model: UserSession, separate: true,  order: [['createdAt', 'DESC']], }
+                {model: Rights, separate: true},
+                {model: UserSession, separate: true, order: [['createdAt', 'DESC']],}
             ]
         });
         if (!user) {
@@ -97,7 +97,7 @@ class UserService {
                     read: false,
                     delete: false
                 }],
-                UserSessions:userSession
+                UserSessions: userSession
             }
         }
     }
@@ -116,7 +116,10 @@ class UserService {
         if (!userData || !tokenFromDb) {
             throw ApiError.UnauthorizedError();
         }
-        const user = await User.findOne({where: {id: userData.id}, include: [{model:Rights, separate:true},{model:UserSession, separate:true}]});
+        const user = await User.findOne({
+            where: {id: userData.id},
+            include: [{model: Rights, separate: true}, {model: UserSession, separate: true}]
+        });
         const {
             id,
             email: userEmail,
@@ -206,7 +209,11 @@ class UserService {
             const {id} = req.params;
             const usersData = await User.findOne({
                 where: {id},
-                include: [{model: Rights, separate: true},            { model: UserSession, separate: true,  order: [['createdAt', 'DESC']], }]
+                include: [{model: Rights, separate: true}, {
+                    model: UserSession,
+                    separate: true,
+                    order: [['createdAt', 'DESC']],
+                }]
             });
             const processedUser = {...usersData.dataValues}
             delete processedUser.password
@@ -328,6 +335,62 @@ class UserService {
             throw new ApiError.UnauthorizedError();
         }
         return userRole?.role === 'superadmin' || userRole?.role === 'admin';
+    }
+
+    async saveDurations(userId, application) {
+
+        let total = 0;
+
+        const result = await UserSession.findOne({
+            where: {
+                userId,
+                connectedAt: {[Op.lte]: application.createdAt},
+                disconnectedAt: {[Op.gte]: application.createdAt},
+            },
+            raw: true
+        });
+
+        if (result) {
+            total += (result.disconnectedAt - application.createdAt);
+        }
+
+
+        const restSessions = await UserSession.findAll({
+            where: {
+                userId,
+                connectedAt: {[Op.gt]: result.connectedAt},
+                ...(application.passedToCoordinatorTime
+                    ? {disconnectedAt: {[Op.lte]: application.passedToCoordinatorTime}}
+                    : {})
+            },
+            raw: true
+        });
+
+        if (restSessions && restSessions.length > 0) {
+            restSessions.forEach(session => {
+                total += session.durationSeconds;
+            })
+        }
+
+
+        if (application.passedToCoordinatorTime) {
+            const finalSession = await UserSession.findOne({
+                where: {
+                    userId,
+                    connectedAt: {[Op.lte]: application.passedToCoordinatorTime},
+                    disconnectedAt: {[Op.gte]: application.passedToCoordinatorTime}
+                },
+                raw: true
+            })
+
+            if (finalSession) {
+                total += (finalSession.disconnectedAt - application.passedToCoordinatorTime);
+            }
+
+        }
+
+        return total;
+
     }
 }
 

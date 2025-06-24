@@ -1,4 +1,5 @@
 const {User, Application, UserSession} = require('../models');
+const {saveDurations} = require('../service/user-service');
 const {Op} = require('sequelize');
 const dayjs = require("dayjs");
 const utc = require('dayjs/plugin/utc');
@@ -54,21 +55,20 @@ class AnalyticsController {
             const {period, id} = req.query;
             const user = await User.findOne({
                 where: {id},
-                include: [{
-                    model: UserSession,
-                    where: {
-                        connectedAt: periodMap[period],
-
-                    },
-                    required: false // если нужно получить пользователя даже без сессий
-                }]
             });
+
             const applications = await Application.findAll({
                 where: {
                     managerId: user.id.toString(),
                     createdAt: periodMap[period],
                 }
             });
+
+
+            for (const application of applications) {
+             const applicationDuration =   await saveDurations(user.id, application);
+             console.log('applicationDuration', applicationDuration);
+            }
 
 
             const processedUser = {
