@@ -374,6 +374,7 @@ class UserService {
 
 
         if (application.passedToCoordinatorTime) {
+            console.log('application.passedToCoordinatorTime',application.passedToCoordinatorTime);
             const finalSession = await UserSession.findOne({
                 where: {
                     userId,
