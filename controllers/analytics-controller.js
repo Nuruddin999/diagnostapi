@@ -64,10 +64,9 @@ class AnalyticsController {
                 }
             });
 
-
+            let applDurationMap = {}
             for (const application of applications) {
-             const applicationDuration =   await saveDurations(user.id, application);
-             console.log('applicationDuration', applicationDuration);
+                applDurationMap[application.dataValues.id] = await saveDurations(user.id, application.dataValues);
             }
 
 
@@ -78,7 +77,8 @@ class AnalyticsController {
                     name: appl.dataValues.patientName,
                     birth: appl.dataValues.patientBirthDate,
                     createdAt: appl.dataValues.createdAt,
-                    passToCoordinatorTime: appl.dataValues.passToCoordinatorTime
+                    passToCoordinatorTime: appl.dataValues.passToCoordinatorTime,
+                    duration: applDurationMap[appl.dataValues.id]
                 })),
                 sessions: user.UserSessions
             }
