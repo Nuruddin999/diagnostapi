@@ -355,7 +355,7 @@ class UserService {
         if (result) {
             total += (result.disconnectedAt - application.createdAt);
         }
-
+        console.log('result  total +=',result);
         if (!result) {
             return 0
         }
@@ -370,6 +370,8 @@ class UserService {
             },
             raw: true
         });
+
+        console.log('restSessions',restSessions);
 
         if (restSessions && restSessions.length > 0) {
             restSessions.forEach(session => {
