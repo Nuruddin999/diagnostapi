@@ -359,6 +359,7 @@ class UserService {
         if (!result) {
             return 0
         }
+        console.log(`application.passedToCoordinatorTime: ${application}`);
 console.log(`application.passedToCoordinatorTime: ${application.passedToCoordinatorTime}`);
         const restSessions = await UserSession.findAll({
             where: {
