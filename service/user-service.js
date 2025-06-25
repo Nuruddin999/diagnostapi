@@ -381,19 +381,21 @@ console.log(`application.passedToCoordinatorTime: ${application.passToCoordinato
         }
 
 
-        if (application.passedToCoordinatorTime) {
+        if (application.passToCoordinatorTime) {
 
             const finalSession = await UserSession.findOne({
                 where: {
                     userId,
-                    connectedAt: {[Op.lte]: application.passedToCoordinatorTime},
-                    disconnectedAt: {[Op.gte]: application.passedToCoordinatorTime}
+                    connectedAt: {[Op.lte]: application.passToCoordinatorTime},
+                    disconnectedAt: {[Op.gte]: application.passToCoordinatorTime}
                 },
                 raw: true
             })
 
+            console.log('finalSession',finalSession);
+
             if (finalSession) {
-                total += (finalSession.disconnectedAt - application.passedToCoordinatorTime);
+                total += (finalSession.disconnectedAt - application.passToCoordinatorTime);
             }
 
         }
