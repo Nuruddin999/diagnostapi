@@ -1,4 +1,4 @@
-const {User, Application, UserSession} = require('../models');
+const {User, Application} = require('../models');
 const {saveDurations} = require('../service/user-service');
 const {Op} = require('sequelize');
 const dayjs = require("dayjs");
@@ -33,16 +33,24 @@ class AnalyticsController {
 
             const applications = await Application.findAll({
                 where: {
-                    managerId: {[Op.in]: users.map(el => el.id.toString())},
+                    managerId: {[Op.in]: users.map(el => {
+                        console.log('el.id',el.id);
+                            console.log('el.dataValues.id',el.dataValues.id);
+                          return  el.dataValues.id.toString()
+                        })},
                     createdAt: periodMap[period],
                     passToCoordinatorTime: periodMap[period],
                 }
             });
             const processedUsers = [...users].map(el => ({
-                id: el.id,
+                id: el.dataValues.id,
                 name: el.dataValues.name,
                 speciality: el.dataValues.speciality,
-                applications: applications.filter(appl => appl.managerId.toString() === el.dataValues.id.toString()).length
+                applications: applications.filter(appl => {
+                    console.log('appl.managerId',appl.managerId)
+                    console.log('appl.dataValues.managerId',appl.dataValues.managerId)
+                    return appl.dataValues.managerId.toString() === el.dataValues.id.toString()
+                }).length
             }));
             return res.json({users: processedUsers, count: applications.length});
         } catch (err) {
