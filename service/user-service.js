@@ -338,7 +338,7 @@ class UserService {
     }
 
     async saveDurations(userId, application) {
-
+        console.log('userId:',userId);
         let total = 0;
 
         const result = await UserSession.findOne({
@@ -350,6 +350,8 @@ class UserService {
             raw: true
         });
 
+        console.log('result',result);
+
         if (result) {
             total += (result.disconnectedAt - application.createdAt);
         }
@@ -357,6 +359,7 @@ class UserService {
         if (!result) {
             return 0
         }
+
         const restSessions = await UserSession.findAll({
             where: {
                 userId,
