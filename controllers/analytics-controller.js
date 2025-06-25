@@ -30,8 +30,7 @@ class AnalyticsController {
         try {
             const {period} = req.query;
             const users = await User.findAll();
-            console.log('user[]0',users[0].dataValues);
-            console.log('mapped',users.map(el => el.dataValues.id.toString()))
+
             const applications = await Application.findAll({
                 where: {
                     managerId: {[Op.in]: users.map(el => el.id.toString())},
