@@ -355,11 +355,11 @@ class UserService {
         if (result) {
             total += (result.disconnectedAt - application.createdAt);
         }
-        console.log('result  total +=',result);
+
         if (!result) {
             return 0
         }
-
+console.log(`application.passedToCoordinatorTime: ${application.passedToCoordinatorTime}`);
         const restSessions = await UserSession.findAll({
             where: {
                 userId,
