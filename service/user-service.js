@@ -360,13 +360,13 @@ class UserService {
             return 0
         }
         console.log(`application.passedToCoordinatorTime: ${application}`);
-console.log(`application.passedToCoordinatorTime: ${application.passedToCoordinatorTime}`);
+console.log(`application.passedToCoordinatorTime: ${application.passToCoordinatorTime}`);
         const restSessions = await UserSession.findAll({
             where: {
                 userId,
                 connectedAt: {[Op.gt]: result.connectedAt},
-                ...(application.passedToCoordinatorTime
-                    ? {disconnectedAt: {[Op.lte]: application.passedToCoordinatorTime}}
+                ...(application.passToCoordinatorTime
+                    ? {disconnectedAt: {[Op.lte]: application.passToCoordinatorTime}}
                     : {})
             },
             raw: true
