@@ -34,8 +34,6 @@ class AnalyticsController {
             const applications = await Application.findAll({
                 where: {
                     managerId: {[Op.in]: users.map(el => {
-                        console.log('el.id',el.id);
-                            console.log('el.dataValues.id',el.dataValues.id);
                           return  el.dataValues.id.toString()
                         })},
                     createdAt: periodMap[period],
@@ -47,8 +45,6 @@ class AnalyticsController {
                 name: el.dataValues.name,
                 speciality: el.dataValues.speciality,
                 applications: applications.filter(appl => {
-                    console.log('appl.managerId',appl.managerId)
-                    console.log('appl.dataValues.managerId',appl.dataValues.managerId)
                     return appl.dataValues.managerId.toString() === el.dataValues.id.toString()
                 }).length
             }));
@@ -68,14 +64,14 @@ class AnalyticsController {
 
             const applications = await Application.findAll({
                 where: {
-                    managerId: user.id.toString(),
+                    managerId: user.dataValues.id.toString(),
                     createdAt: periodMap[period],
                 }
             });
 
             let applDurationMap = {}
             for (const application of applications) {
-                applDurationMap[application.dataValues.id] = await saveDurations(user.id, application.dataValues);
+                applDurationMap[application.dataValues.id] = await saveDurations(user.dataValues.id, application.dataValues);
             }
 
 
@@ -89,7 +85,7 @@ class AnalyticsController {
                     passToCoordinatorTime: appl.dataValues.passToCoordinatorTime,
                     duration: applDurationMap[appl.dataValues.id]
                 })),
-                sessions: user.UserSessions
+                sessions: user.dataValues.UserSessions
             }
 
             return res.json({user: processedUser, count: applications.length, period: periodMap[period][Op.between]});
