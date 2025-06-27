@@ -62,10 +62,12 @@ class AnalyticsController {
                 where: {id},
             });
 
+            const exactPeriod = period ? [] :  [new Date(fromD), new Date(toD)]
+
             const applications = await Application.findAll({
                 where: {
                     managerId: user.dataValues.id.toString(),
-                    createdAt: period ? periodMap[period]: {[Op.between]: [new Date(fromD), new Date(toD)]},
+                    createdAt: period ? periodMap[period]: {[Op.between]: exactPeriod},
                 }
             });
 
@@ -88,8 +90,9 @@ class AnalyticsController {
                 sessions: user.dataValues.UserSessions
             }
 
-            return res.json({user: processedUser, count: applications.length, period: periodMap[period][Op.between]});
+            return res.json({user: processedUser, count: applications.length, period: period ? periodMap[period][Op.between]: exactPeriod});
         } catch (err) {
+            console.error(err);
             next(err);
         }
 

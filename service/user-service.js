@@ -338,7 +338,7 @@ class UserService {
     }
 
     async saveDurations(userId, application) {
-        console.log('userId:',userId);
+
         let total = 0;
 
         const result = await UserSession.findOne({
@@ -350,7 +350,6 @@ class UserService {
             raw: true
         });
 
-        console.log('result',result);
 
         if (result) {
             total += (result.disconnectedAt - application.createdAt);
@@ -359,8 +358,7 @@ class UserService {
         if (!result) {
             return 0
         }
-        console.log(`application.passedToCoordinatorTime: ${application}`);
-console.log(`application.passedToCoordinatorTime: ${application.passToCoordinatorTime}`);
+
         const restSessions = await UserSession.findAll({
             where: {
                 userId,
@@ -372,7 +370,7 @@ console.log(`application.passedToCoordinatorTime: ${application.passToCoordinato
             raw: true
         });
 
-        console.log('restSessions',restSessions);
+
 
         if (restSessions && restSessions.length > 0) {
             restSessions.forEach(session => {
@@ -392,7 +390,6 @@ console.log(`application.passedToCoordinatorTime: ${application.passToCoordinato
                 raw: true
             })
 
-            console.log('finalSession',finalSession);
 
             if (finalSession) {
                 total += (finalSession.disconnectedAt - application.passToCoordinatorTime);
