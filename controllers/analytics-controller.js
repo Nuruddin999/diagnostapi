@@ -94,6 +94,48 @@ class AnalyticsController {
         }
 
     }
+
+    async getUsersItemRecapByPeriod(req, res, next) {
+        try {
+            const {fromD,toD,id} = req.query;
+
+            const user = await User.findOne({
+                where: {id},
+            });
+
+            // const applications = await Application.findAll({
+            //     where: {
+            //         managerId: user.dataValues.id.toString(),
+            //         createdAt: periodMap[period],
+            //     }
+            // });
+            //
+            // let applDurationMap = {}
+            // for (const application of applications) {
+            //     applDurationMap[application.dataValues.id] = await saveDurations(user.dataValues.id, application.dataValues);
+            // }
+            //
+            //
+            // const processedUser = {
+            //     name: user.dataValues.name,
+            //     speciality: user.dataValues.speciality,
+            //     applications: applications.map(appl => ({
+            //         name: appl.dataValues.patientName,
+            //         birth: appl.dataValues.patientBirthDate,
+            //         createdAt: appl.dataValues.createdAt,
+            //         passToCoordinatorTime: appl.dataValues.passToCoordinatorTime,
+            //         duration: applDurationMap[appl.dataValues.id]
+            //     })),
+            //     sessions: user.dataValues.UserSessions
+            // }
+
+            // return res.json({user: processedUser, count: applications.length, period: periodMap[period][Op.between]});
+            res.json({fromD,toD, user:{name:user.dataValues.name}});
+        } catch (err) {
+            next(err);
+        }
+
+    }
 }
 
 module.exports = new AnalyticsController()
