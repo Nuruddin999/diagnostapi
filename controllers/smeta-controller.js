@@ -117,16 +117,16 @@ class SmetaController {
             const offset = page * limit - limit
             const whereQuery = {}
             if (fundRequest && fundRequest.trim() !== '') {
-                whereQuery['fundRequest'] = { [Op.iLike]: `%${fundRequest}%` };
+                whereQuery['fundRequest'] = {[Op.iLike]: `%${fundRequest}%`};
             }
             if (patientRequest && patientRequest.trim() !== '') {
-                whereQuery.patientRequest = { [Op.iLike]: `%${patientRequest}%` };
+                whereQuery.patientRequest = {[Op.iLike]: `%${patientRequest}%`};
             }
             if (patientPromoter && patientPromoter.trim() !== '') {
-                whereQuery.patientPromoter = { [Op.iLike]: `%${patientPromoter}%` };
+                whereQuery.patientPromoter = {[Op.iLike]: `%${patientPromoter}%`};
             }
             if (customer && customer.trim() !== '') {
-                whereQuery.customer = { [Op.iLike]: `%${customer}%` };
+                whereQuery.customer = {[Op.iLike]: `%${customer}%`};
             }
             const applicationsData = await Smeta.findAndCountAll({
 
@@ -151,7 +151,7 @@ class SmetaController {
 
     async updateSmeta(req, res, next) {
         try {
-            const {id} = req.body
+            const {id, diff} = req.body
             const foundedSmeta = await Smeta.findOne({
                 where: {
                     applId: id.toString()
@@ -160,14 +160,20 @@ class SmetaController {
             if (!foundedSmeta) {
                 return res.json({success: false, message: 'Смета не найдена. Сначала сохраните заключение'});
             }
-            await Smeta.update({isReadyForCoordinator: true, status:null}, {
+            await Smeta.update({isReadyForCoordinator: true, status: null}, {
                 where: {
                     applId: id.toString()
                 }
             })
-            await Application.update({passToCoordinatorTime: new Date()}, {
+            const foundedAppl = await Application.findOne({
                 where: {
                     id: id.toString()
+                }
+            })
+            const total = (foundedAppl.dataValues.duration || 0) + diff
+            await Application.update({passToCoordinatorTime: new Date(), duration: total}, {
+                where: {
+                    id: id.toString(),
                 }
             })
             return res.json({success: true});
@@ -282,8 +288,8 @@ class SmetaController {
     async addReworkComment(req, res, next) {
         try {
             const {comment, smetaId, applId} = req.body
-            const result = await ReworkComment.create({comment, ...(applId !== undefined ? { applicationId: applId } : { smetaId }) })
-            if (applId  !== undefined ) {
+            const result = await ReworkComment.create({comment, ...(applId !== undefined ? {applicationId: applId} : {smetaId})})
+            if (applId !== undefined) {
                 await Smeta.update({isReadyForCoordinator: false}, {
                     where: {
                         id: smetaId.toString()
