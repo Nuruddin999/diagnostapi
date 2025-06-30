@@ -75,7 +75,7 @@ class ApplicationController {
                     },
                 ]
             });
-            const manager = await User.findOne({ where: { id: applicationsData.managerId } })
+            const manager = await User.findOne({where: {id: applicationsData.managerId}})
             const prevCommetnsList = applicationsData.Comments
             const isOldFormat = prevCommetnsList.length > 0 && prevCommetnsList[0].title !== 'Подопечный (ая) обратился в'
             const newFormatComments = Array(13).fill(null).map(() => ({}));
@@ -108,7 +108,7 @@ class ApplicationController {
                 newFormatComments[12].title = 'и'
                 await Comment.destroy({where: {applicationId: id}});
                 for (const comment of newFormatComments) {
-                    const result = await Comment.create({ ...comment });
+                    const result = await Comment.create({...comment});
                     await result.setApplication(applicationsData);
                 }
             }
@@ -266,8 +266,11 @@ class ApplicationController {
 
     async updateDuration(req, res, next) {
         try {
+            const foundAppl = await Application.findOne({
+                where: {id}
+            })
             const {duration, id} = req.body
-            const applicationsData = await Application.update({duration},{where: {id}});
+            const applicationsData = await Application.update({duration: (foundAppl.dataValues.duration || 0) + duration}, {where: {id}});
             return res.json({applicationsData});
         } catch (e) {
             next(e);
