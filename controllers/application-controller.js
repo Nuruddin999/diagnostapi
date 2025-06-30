@@ -270,11 +270,7 @@ class ApplicationController {
             const foundAppl = await Application.findOne({
                 where: {id}
             })
-            console.log('APPL', foundAppl.dataValues)
-            console.log('APPL DURATION', foundAppl.dataValues.duration)
-            console.log(' DURATION', duration)
             const total = (foundAppl.dataValues.duration || 0) + duration
-            console.log(' TOTAL', total)
             const applicationsData = await Application.update({duration: total}, {where: {id}});
             return res.json({applicationsData});
         } catch (e) {

@@ -5,7 +5,6 @@ class SpecialityController {
     async create(req, res, next) {
         try {
             const { speciality } = req.body
-            console.log(speciality.speciality)
             const alreadyCreated = await Speciality.findOne({ where: { name:speciality } })
             if(!alreadyCreated){
                 const specialityData = await Speciality.create({ name:speciality});
