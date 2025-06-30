@@ -266,11 +266,12 @@ class ApplicationController {
 
     async updateDuration(req, res, next) {
         try {
+            const {duration, id} = req.body
             const foundAppl = await Application.findOne({
                 where: {id}
             })
-            const {duration, id} = req.body
-            const applicationsData = await Application.update({duration: (foundAppl.dataValues.duration || 0) + duration}, {where: {id}});
+            const total = (foundAppl.dataValues.duration || 0) + duration
+            const applicationsData = await Application.update({duration: total}, {where: {id}});
             return res.json({applicationsData});
         } catch (e) {
             next(e);
