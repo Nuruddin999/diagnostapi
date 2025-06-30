@@ -90,9 +90,7 @@ class AnalyticsController {
                 })),
                 sessions: user.dataValues.UserSessions
             }
-            if (period) {
-                console.log('period',periodMap[period][Op.between])
-            }
+
             return res.json({user: processedUser, count: applications.length, period: period ? periodMap[period][Op.between]: exactPeriod});
         } catch (err) {
             console.error(err);

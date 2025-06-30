@@ -54,6 +54,7 @@ module.exports = (sequelize, DataTypes) => {
         patientBirthDate: DataTypes.STRING,
         checkUpPlaceIsDeleted: DataTypes.BOOLEAN,
         execDate: DataTypes.STRING,
+        duration:DataTypes.INTEGER,
         passToCoordinatorTime:DataTypes.DATE,
         createdAt:DataTypes.DATE,
         updatedAt:DataTypes.DATE,
