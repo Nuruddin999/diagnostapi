@@ -264,6 +264,16 @@ class ApplicationController {
         }
     }
 
+    async updateDuration(req, res, next) {
+        try {
+            const {duration, id} = req.body
+            const applicationsData = await Application.update({duration},{where: {id}});
+            return res.json({applicationsData});
+        } catch (e) {
+            next(e);
+        }
+    }
+
     async deleteApplication(req, res, next) {
         try {
             const {id} = req.params;
