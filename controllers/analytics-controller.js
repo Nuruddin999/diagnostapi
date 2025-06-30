@@ -1,5 +1,4 @@
 const {User, Application} = require('../models');
-const {saveDurations} = require('../service/user-service');
 const {Op} = require('sequelize');
 const dayjs = require("dayjs");
 const utc = require('dayjs/plugin/utc');
@@ -72,10 +71,7 @@ class AnalyticsController {
                 }
             });
 
-            let applDurationMap = {}
-            for (const application of applications) {
-                applDurationMap[application.dataValues.id] = await saveDurations(user.dataValues.id, application.dataValues);
-            }
+
 
 
             const processedUser = {
@@ -86,7 +82,7 @@ class AnalyticsController {
                     birth: appl.dataValues.patientBirthDate,
                     createdAt: appl.dataValues.createdAt,
                     passToCoordinatorTime: appl.dataValues.passToCoordinatorTime,
-                    duration: applDurationMap[appl.dataValues.id]
+                    duration:  appl.dataValues.duration || 0
                 })),
                 sessions: user.dataValues.UserSessions
             }
