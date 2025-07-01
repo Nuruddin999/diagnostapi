@@ -43,7 +43,7 @@ class AnalyticsController {
                 id: el.dataValues.id,
                 name: el.dataValues.name,
                 speciality: el.dataValues.speciality,
-                applications: applications.map(appl => ({
+                applications: applications.filter(applEl=>applEl.dataValues.id.toString() === el.dataValues.id.toString()).map(appl => ({
                     name: appl.dataValues.patientName,
                     birth: appl.dataValues.patientBirthDate,
                     createdAt: appl.dataValues.createdAt,
