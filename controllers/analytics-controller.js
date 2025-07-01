@@ -58,11 +58,14 @@ class AnalyticsController {
     async getUsersItemRecap(req, res, next) {
         try {
             const {period, fromD, toD, id} = req.query;
+            console.log('PERIOD', period);
             const user = await User.findOne({
                 where: {id},
             });
 
             const exactPeriod = period ? [] :  [new Date(fromD), new Date(toD)]
+            console.log('exactPeriod'.toUpperCase(), exactPeriod);
+            console.log('MAP',periodMap[period]);
 
             const applications = await Application.findAll({
                 where: {
