@@ -43,9 +43,13 @@ class AnalyticsController {
                 id: el.dataValues.id,
                 name: el.dataValues.name,
                 speciality: el.dataValues.speciality,
-                applications: applications.filter(appl => {
-                    return appl.dataValues.managerId.toString() === el.dataValues.id.toString()
-                }).length
+                applications: applications.map(appl => ({
+                    name: appl.dataValues.patientName,
+                    birth: appl.dataValues.patientBirthDate,
+                    createdAt: appl.dataValues.createdAt,
+                    passToCoordinatorTime: appl.dataValues.passToCoordinatorTime,
+                    duration:  appl.dataValues.duration || 0
+                })),
             }));
             return res.json({users: processedUsers, count: applications.length, period: period ? periodMap[period][Op.between]: exactPeriod});
         } catch (err) {
