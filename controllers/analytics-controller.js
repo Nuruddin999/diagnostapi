@@ -28,16 +28,15 @@ const periodMap = {
 class AnalyticsController {
     async getUsersRecap(req, res, next) {
         try {
-            const {period} = req.query;
+            const {period, fromD, toD} = req.query;
             const users = await User.findAll();
-
+            const exactPeriod = period ? [] :  [new Date(fromD), new Date(toD)]
             const applications = await Application.findAll({
                 where: {
                     managerId: {[Op.in]: users.map(el => {
                           return  el.dataValues.id.toString()
                         })},
-                    createdAt: periodMap[period],
-                    passToCoordinatorTime: periodMap[period],
+                    createdAt: period ? periodMap[period]: {[Op.between]: exactPeriod},
                 }
             });
             const processedUsers = [...users].map(el => ({
@@ -48,7 +47,7 @@ class AnalyticsController {
                     return appl.dataValues.managerId.toString() === el.dataValues.id.toString()
                 }).length
             }));
-            return res.json({users: processedUsers, count: applications.length});
+            return res.json({users: processedUsers, count: applications.length, period: period ? periodMap[period][Op.between]: exactPeriod});
         } catch (err) {
             next(err);
         }
@@ -88,7 +87,7 @@ class AnalyticsController {
                 sessions: user.dataValues.UserSessions
             }
 
-            return res.json({user: processedUser, count: applications.length, period: period ? periodMap[period][Op.between]: exactPeriod});
+            return res.json({users: [processedUser], count: applications.length, period: period ? periodMap[period][Op.between]: exactPeriod});
         } catch (err) {
             console.error(err);
             next(err);
