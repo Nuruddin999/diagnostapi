@@ -10,24 +10,29 @@ dayjs.extend(timezone);
 dayjs.extend(isoWeek);
 
 const MSK = 'Europe/Moscow';
-const now = dayjs().tz(MSK).toDate();
-const weekAgo = dayjs().tz(MSK).startOf('isoWeek').toDate();
-const monthAgo = dayjs().tz(MSK).startOf('month').toDate();
-const dayAgoStart = dayjs().tz(MSK).subtract(1, 'day').startOf('day').toDate();
-const dayAgoEnd = dayjs().tz(MSK).subtract(1, 'day').endOf('day').toDate();
 
 
-const periodMap = {
-    week: {[Op.between]: [weekAgo, now]},
-    month: {[Op.between]: [monthAgo, now]},
-    today: {[Op.between]: [dayjs().tz(MSK).startOf('day').toDate(), now]},
-    yesterday: {[Op.between]: [dayAgoStart, dayAgoEnd]},
-}
+const getPeriodMap = () => {
+    const now = dayjs().tz(MSK).toDate();
+    const weekAgo = dayjs().tz(MSK).startOf('isoWeek').toDate();
+    const monthAgo = dayjs().tz(MSK).startOf('month').toDate();
+    const dayAgoStart = dayjs().tz(MSK).subtract(1, 'day').startOf('day').toDate();
+    const dayAgoEnd = dayjs().tz(MSK).subtract(1, 'day').endOf('day').toDate();
+
+    return {
+        week: {[Op.between]: [weekAgo, now]},
+        month: {[Op.between]: [monthAgo, now]},
+        today: {[Op.between]: [dayjs().tz(MSK).startOf('day').toDate(), now]},
+        yesterday: {[Op.between]: [dayAgoStart, dayAgoEnd]},
+    };
+};
 
 
 class AnalyticsController {
+
     async getUsersRecap(req, res, next) {
         try {
+            const periodMap = getPeriodMap();
             const {period, fromD, toD} = req.query;
             const users = await User.findAll();
             const exactPeriod = period ? [] :  [new Date(fromD), new Date(toD)]
@@ -39,7 +44,7 @@ class AnalyticsController {
                     createdAt: period ? periodMap[period]: {[Op.between]: exactPeriod},
                 }
             });
-            const processedUsers = [...users].map(el => ({
+            const processedUsers = users.map(el => ({
                 id: el.dataValues.id,
                 name: el.dataValues.name,
                 speciality: el.dataValues.speciality,
@@ -60,6 +65,7 @@ class AnalyticsController {
 
     async getUsersItemRecap(req, res, next) {
         try {
+            const periodMap = getPeriodMap();
             const {period, fromD, toD, id} = req.query;
             const user = await User.findOne({
                 where: {id},
