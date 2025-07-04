@@ -35,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
         isDeletedPlace: DataTypes.BOOLEAN,
         department: DataTypes.STRING,
         urlSignPath: DataTypes.STRING,
+        fundName: DataTypes.TEXT,
         signFileName: DataTypes.STRING
     }, {
         sequelize,

@@ -16,6 +16,7 @@ class UserService {
         if (candidate) {
             throw ApiError.BadRequest(`Пользователь с почтовым адресом ${body.email} уже существует`)
         }
+
         const password = await bcrypt.hash(body.password, 10);
         const result = await User.create({...body, password})
         const rights = this.giveRights(body.role)
@@ -315,6 +316,8 @@ class UserService {
                     read: true,
                     delete: true
                 }]
+            default:
+                return []
         }
     }
 
