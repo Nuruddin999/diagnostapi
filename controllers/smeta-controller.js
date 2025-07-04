@@ -151,7 +151,7 @@ class SmetaController {
 
     async updateSmeta(req, res, next) {
         try {
-            const {id, diff} = req.body
+            const {id} = req.body
             const foundedSmeta = await Smeta.findOne({
                 where: {
                     applId: id.toString()
@@ -165,13 +165,7 @@ class SmetaController {
                     applId: id.toString()
                 }
             })
-            const foundedAppl = await Application.findOne({
-                where: {
-                    id: id.toString()
-                }
-            })
-            const total = (foundedAppl.dataValues.duration || 0) + diff
-            await Application.update({passToCoordinatorTime: new Date(), duration: total}, {
+            await Application.update({passToCoordinatorTime: new Date()}, {
                 where: {
                     id: id.toString(),
                 }
