@@ -1,7 +1,7 @@
 const userService = require('../service/user-service');
 const {validationResult} = require('express-validator');
 const ApiError = require('../exceptions/api-error');
-const {UserSession} = require('../models');
+const {UserSession, Application} = require('../models');
 
 class UserController {
     async registration(req, res, next) {
@@ -154,19 +154,18 @@ class UserController {
             })
 
 
-
             if (!lastSession) {
                 const result = await UserSession.create({userId, connectedAt: nowTime});
                 return res.json({id: result.id})
             }
             if (!lastSession.disconnectedAt) {
-                return res.json({id:lastSession.id})
+                return res.json({id: lastSession.id})
             }
             const diffMinutes = (nowTime - new Date(lastSession.disconnectedAt)) / 1000 / 60;
             if (diffMinutes < 5) {
                 lastSession.disconnectedAt = null;
                 await lastSession.save();
-                return res.json({id:lastSession.id})
+                return res.json({id: lastSession.id})
             } else {
                 const result = await UserSession.create({userId, connectedAt: nowTime});
                 return res.json({id: result.id})
@@ -180,7 +179,7 @@ class UserController {
     async saveEndTime(req, res, next) {
         try {
 
-            const {sessionId} = req.body
+            const {sessionId, id} = req.body
             const nowTime = new Date();
             const session = await UserSession.findAll({
                 where: {
@@ -192,13 +191,20 @@ class UserController {
             const durationMs = new Date() - new Date(session[0].connectedAt);
             if (durationMs < 5000) {
                 // Очень быстрая перезагрузка — не записываем disconnectedAt
-                return res.json({ skip: true });
+                return res.json({skip: true});
             }
             const duration = nowTime - start;
             const result = await UserSession.update({
                 disconnectedAt: nowTime,
                 durationSeconds: duration
             }, {where: {id: sessionId}});
+            if (req.body.id) {
+                const foundAppl = await Application.findOne({
+                    where: {id}
+                })
+                const total = (foundAppl.dataValues.duration || 0) + req.body.duration
+                await Application.update({duration: total}, {where: {id}});
+            }
             return res.json({id: result})
         } catch (e) {
             next(e);
