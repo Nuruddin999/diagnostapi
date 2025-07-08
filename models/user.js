@@ -36,6 +36,8 @@ module.exports = (sequelize, DataTypes) => {
         department: DataTypes.STRING,
         urlSignPath: DataTypes.STRING,
         fundName: DataTypes.TEXT,
+        fundDirectorName: DataTypes.TEXT,
+        fundAddress: DataTypes.TEXT,
         signFileName: DataTypes.STRING
     }, {
         sequelize,
