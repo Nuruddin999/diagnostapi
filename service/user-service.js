@@ -169,14 +169,18 @@ class UserService {
         try {
             const {page, limit, email, name, speciality, phone, role} = req.query;
             const offset = page * limit - limit
+            const queryParams = {
+                email: {[Op.like]: `%${email}%`},
+                name: {[Op.like]: `%${name}%`},
+                speciality: {[Op.like]: `%${speciality}%`},
+                phone: {[Op.like]: `%${phone}%`},
+                role: {[Op.like]: `%${role}%`},
+            }
+            if (role === 'fundWorker') {
+                queryParams.role = {[Op.like]: `%${role}%`}
+            }
             const userdata = await User.findAndCountAll({
-                where: {
-                    email: {[Op.like]: `%${email}%`},
-                    name: {[Op.like]: `%${name}%`},
-                    speciality: {[Op.like]: `%${speciality}%`},
-                    phone: {[Op.like]: `%${phone}%`},
-                    role: {[Op.like]: `%${role}%`},
-                }, limit, offset
+                where: queryParams, limit, offset
             });
             return res.json(userdata);
         } catch (e) {
