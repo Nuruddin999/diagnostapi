@@ -167,7 +167,7 @@ class UserService {
 
     async getByLetter(req, res, next) {
         try {
-            const {page, limit, email, name, speciality, phone, role} = req.query;
+            const {page, limit, email, name, speciality, phone, role, fundName} = req.query;
             const offset = page * limit - limit
             const queryParams = {
                 email: {[Op.like]: `%${email}%`},
@@ -177,6 +177,9 @@ class UserService {
                 role: role === 'fundWorker'
                     ? { [Op.eq]: 'fundWorker' }
                     : { [Op.ne]: 'fundWorker' }
+            }
+            if (role === 'fundWorker') {
+                queryParams.fundName =  {[Op.like]: `%${fundName}%`}
             }
 
             const userdata = await User.findAndCountAll({
