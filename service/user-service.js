@@ -167,7 +167,7 @@ class UserService {
 
     async getByLetter(req, res, next) {
         try {
-            const {page, limit, email, name, speciality, phone} = req.query;
+            const {page, limit, email, name, speciality, phone, role} = req.query;
             const offset = page * limit - limit
             const userdata = await User.findAndCountAll({
                 where: {
@@ -175,6 +175,7 @@ class UserService {
                     name: {[Op.like]: `%${name}%`},
                     speciality: {[Op.like]: `%${speciality}%`},
                     phone: {[Op.like]: `%${phone}%`},
+                    role: {[Op.like]: `%${role}%`},
                 }, limit, offset
             });
             return res.json(userdata);
