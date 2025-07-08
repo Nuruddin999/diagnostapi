@@ -174,7 +174,6 @@ class UserService {
                 name: {[Op.like]: `%${name}%`},
                 speciality: {[Op.like]: `%${speciality}%`},
                 phone: {[Op.like]: `%${phone}%`},
-                role: {[Op.like]: `%${role}%`},
             }
             if (role === 'fundWorker') {
                 queryParams.role = {[Op.like]: `%${role}%`}
