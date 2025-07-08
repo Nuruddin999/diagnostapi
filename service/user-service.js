@@ -174,13 +174,15 @@ class UserService {
                 name: {[Op.like]: `%${name}%`},
                 speciality: {[Op.like]: `%${speciality}%`},
                 phone: {[Op.like]: `%${phone}%`},
+                role: role === 'fundWorker'
+                    ? { [Op.eq]: 'fundWorker' }
+                    : { [Op.ne]: 'fundWorker' }
             }
-            if (role === 'fundWorker') {
-                queryParams.role = {[Op.like]: `%${role}%`}
-            }
+
             const userdata = await User.findAndCountAll({
                 where: queryParams, limit, offset
             });
+
             return res.json(userdata);
         } catch (e) {
             next(e);
