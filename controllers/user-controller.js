@@ -218,11 +218,11 @@ class UserController {
     async userDurationHeartBit(req, res, next) {
         try {
 
-            const {sessionId, duration} = req.body
+            const {id, duration} = req.body
 
             const session = await UserSession.findOne({
                 where: {
-                    id: sessionId,
+                    id,
                 },
                 raw: true
             });
@@ -230,7 +230,7 @@ class UserController {
 
             const result = await UserSession.update({
                 durationSeconds: duration + prevDuration,
-            }, {where: {id: sessionId}});
+            }, {where: {id}});
 
             return res.json({id: result})
         } catch (e) {
