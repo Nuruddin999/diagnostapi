@@ -158,8 +158,9 @@ class UserController {
                 const result = await UserSession.create({userId, connectedAt: nowTime});
                 return res.json({id: result.id})
             }
+
             const nowTime = Date.now();
-            const connectedAt = new Date(lastSession.connectedAt).getTime();
+            const connectedAt = lastSession.connectedAt.getTime();
             const duration = lastSession.duration;
             const endTime = connectedAt + duration;
             const diffMinutes = (nowTime - endTime) / 1000 / 60;
