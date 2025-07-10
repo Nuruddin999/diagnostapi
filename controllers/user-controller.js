@@ -161,17 +161,16 @@ class UserController {
 
             const nowTime = Date.now();
             const connectedAt = lastSession.connectedAt.getTime();
-            console.log('connectedAt',lastSession.connectedAt);
-            console.log('connectedAtTime',connectedAt);
             const duration = lastSession.durationSeconds;
             const endTime = connectedAt + duration;
-            console.log('duration',duration);
-            console.log('endTime',endTime);
             const diffMinutes = (nowTime - endTime) / 1000 / 60;
 
             if (diffMinutes < 5) {
                 return res.json({id: lastSession.id})
             } else {
+                await lastSession.update({
+                    disconnectedAt: endTime,
+                });
                 const result = await UserSession.create({userId, connectedAt: nowTime});
                 return res.json({id: result.id})
             }
