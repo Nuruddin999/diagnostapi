@@ -144,7 +144,7 @@ class UserController {
 
     async saveStartTime(req, res, next) {
         try {
-            const nowTime = new Date();
+
             const userId = req.user.id
             const lastSession = await UserSession.findOne({
                 where: {
@@ -158,13 +158,13 @@ class UserController {
                 const result = await UserSession.create({userId, connectedAt: nowTime});
                 return res.json({id: result.id})
             }
-            if (!lastSession.disconnectedAt) {
-                return res.json({id: lastSession.id})
-            }
-            const diffMinutes = (nowTime - new Date(lastSession.disconnectedAt)) / 1000 / 60;
+            const nowTime = Date.now();
+            const connectedAt = new Date(lastSession.connectedAt).getTime();
+            const duration = lastSession.duration;
+            const endTime = connectedAt + duration;
+            const diffMinutes = (nowTime - endTime) / 1000 / 60;
+
             if (diffMinutes < 5) {
-                lastSession.disconnectedAt = null;
-                await lastSession.save();
                 return res.json({id: lastSession.id})
             } else {
                 const result = await UserSession.create({userId, connectedAt: nowTime});
@@ -205,6 +205,29 @@ class UserController {
                 const total = (foundAppl.dataValues.duration || 0) + req.body.duration
                 await Application.update({duration: total}, {where: {id}});
             }
+            return res.json({id: result})
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    async userDurationHeartBit(req, res, next) {
+        try {
+
+            const {sessionId, duration} = req.body
+
+            const session = await UserSession.findOne({
+                where: {
+                    id: sessionId,
+                },
+                raw: true
+            });
+            const prevDuration = session.durationSeconds;
+
+            const result = await UserSession.update({
+                durationSeconds: duration + prevDuration,
+            }, {where: {id: sessionId}});
+
             return res.json({id: result})
         } catch (e) {
             next(e);

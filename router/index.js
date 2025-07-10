@@ -56,4 +56,5 @@ router.get('/sust/',authMiddleware,userController.saveStartTime);
 router.post('/suet/',authMiddleware,userController.saveEndTime);
 router.get('/gurec/',authMiddleware,analyticsController.getUsersRecap);
 router.get('/gutrec/',authMiddleware,analyticsController.getUsersItemRecap);
+router.get('/usdurhrtbt/',authMiddleware,userController.userDurationHeartBit);
 module.exports = router
