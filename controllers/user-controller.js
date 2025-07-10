@@ -161,8 +161,12 @@ class UserController {
 
             const nowTime = Date.now();
             const connectedAt = lastSession.connectedAt.getTime();
-            const duration = lastSession.duration;
+            console.log('connectedAt',lastSession.connectedAt);
+            console.log('connectedAtTime',connectedAt);
+            const duration = lastSession.durationSeconds;
             const endTime = connectedAt + duration;
+            console.log('duration',duration);
+            console.log('endTime',endTime);
             const diffMinutes = (nowTime - endTime) / 1000 / 60;
 
             if (diffMinutes < 5) {
