@@ -74,6 +74,10 @@ class ApplicationController {
                             },
                         ],
                     },
+                    {
+                        model: AbroadInfo,
+                        separate: true,
+                    },
                 ]
             });
             const manager = await User.findOne({where: {id: applicationsData.managerId}})
