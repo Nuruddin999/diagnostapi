@@ -1,15 +1,27 @@
 const authMiddleware = require("../middlewares/auth-middleware");
 const applicationController = require("../controllers/application-controller");
 const applicationRouter=(router)=>{
-    router.post('/application', authMiddleware, applicationController.create);
-    router.get('/applications', authMiddleware, applicationController.getAll);
-    router.get('/applications/:id', authMiddleware, applicationController.getOne);
-    router.get('/appls/', authMiddleware, applicationController.getByLetter);
-    router.post('/updappl/', authMiddleware, applicationController.updateappl);
-    router.post('/upddur/', authMiddleware, applicationController.updateDuration);
-    router.post('/updman/', authMiddleware, applicationController.updateManager);
-    router.post('/changedeloptn/', authMiddleware, applicationController.changeCheckupPlaceDeleteOption);
-    router.get('/applicationdel/:id', authMiddleware, applicationController.deleteApplication)
+    const {
+        changeCheckupPlaceDeleteOption,
+        create,
+        deleteApplication,
+        updateappl,
+        updateManager,
+        updateDuration,
+        updateAbroad,
+        getAll,
+        getByLetter,
+        getOne
+    } = applicationController
+    router.post('/application', authMiddleware, create);
+    router.get('/applications', authMiddleware, getAll);
+    router.get('/applications/:id', authMiddleware, getOne);
+    router.get('/appls/', authMiddleware, getByLetter);
+    router.post('/updappl/', authMiddleware, updateappl);
+    router.post('/upddur/', authMiddleware, updateDuration);
+    router.post('/updman/', authMiddleware, updateManager);
+    router.post('/changedeloptn/', authMiddleware, changeCheckupPlaceDeleteOption);
+    router.get('/applicationdel/:id', authMiddleware, deleteApplication)
 }
 
 module.exports = applicationRouter;
