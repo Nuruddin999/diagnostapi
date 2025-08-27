@@ -9,6 +9,7 @@ const {
     Smetaplan, ReworkComment, ReworkCommentFile,
     AbroadInfo,
 } = require('../models');
+const updateAbroad = require('../service/application-service');
 const {Op} = require('sequelize');
 
 class ApplicationController {
@@ -172,7 +173,8 @@ class ApplicationController {
                 manager,
                 managerSpeciality,
                 fundName,
-                fundRequest
+                fundRequest,
+                abroadInfo
             } = req.body
             const applicationsData = await Application.findOne({where: {id}});
             await applicationsData.update({
@@ -234,6 +236,9 @@ class ApplicationController {
                 await result.setApplication(applicationsData);
                 await Smetaplan.create({...cDoctor, smetaId: smetaData.id});
             }
+
+       await updateAbroad(id,abroadInfo)
+
             return res.json(applicationsData);
         } catch (e) {
             next(e);
