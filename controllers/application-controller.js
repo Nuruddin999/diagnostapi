@@ -238,7 +238,7 @@ class ApplicationController {
             }
 
           //  const res = await updateAbroad(id, abroadInfo)
-            console.log('res', res)
+           // console.log('res', res)
 
             return res.json(applicationsData);
         } catch (e) {
