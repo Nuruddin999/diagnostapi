@@ -237,8 +237,8 @@ class ApplicationController {
                 await Smetaplan.create({...cDoctor, smetaId: smetaData.id});
             }
 
-     const res =   await updateAbroad(id,abroadInfo)
-            console.log('res',res)
+          //  const res = await updateAbroad(id, abroadInfo)
+            console.log('res', res)
 
             return res.json(applicationsData);
         } catch (e) {
@@ -298,6 +298,7 @@ class ApplicationController {
             next(e);
         }
     }
+
     async createAbroad(req, res, next) {
         try {
             const applicationData = await AbroadInfo.create({
@@ -308,12 +309,13 @@ class ApplicationController {
             next(e);
         }
     }
+
     async updateAbroad(req, res, next) {
         const {applId, data} = req.body;
         try {
             const applicationData = await AbroadInfo.update({
                 ...data,
-            },{where: {applId}});
+            }, {where: {applId}});
             return res.json(applicationData);
         } catch (e) {
             next(e);
