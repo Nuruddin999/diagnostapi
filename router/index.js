@@ -5,6 +5,7 @@ const fileController = require('../controllers/file-controller');
 const specialityController = require('../controllers/speciality-controller');
 const smetaController = require('../controllers/smeta-controller');
 const analyticsController = require('../controllers/analytics-controller');
+const applicationRouter = require('applicationRouter');
 const router = new Router();
 const { body } = require('express-validator');
 const authMiddleware = require('../middlewares/auth-middleware');
@@ -27,15 +28,16 @@ router.post('/usrupd', authMiddleware, userController.updatePrimeData)
 router.get('/userdel/:id', authMiddleware, userController.deleteUser)
 router.get('/superadmn', userController.checkIsSuperAdmin);
 router.post('/changedel', authMiddleware, userController.changeIsDeleted);
-router.post('/application', authMiddleware, applicationController.create);
-router.get('/applications', authMiddleware, applicationController.getAll);
-router.get('/applications/:id', authMiddleware, applicationController.getOne);
-router.get('/appls/', authMiddleware, applicationController.getByLetter);
-router.post('/updappl/', authMiddleware, applicationController.updateappl);
-router.post('/upddur/', authMiddleware, applicationController.updateDuration);
-router.post('/updman/', authMiddleware, applicationController.updateManager);
-router.post('/changedeloptn/', authMiddleware, applicationController.changeCheckupPlaceDeleteOption);
-router.get('/applicationdel/:id', authMiddleware, applicationController.deleteApplication)
+// router.post('/application', authMiddleware, applicationController.create);
+// router.get('/applications', authMiddleware, applicationController.getAll);
+// router.get('/applications/:id', authMiddleware, applicationController.getOne);
+// router.get('/appls/', authMiddleware, applicationController.getByLetter);
+// router.post('/updappl/', authMiddleware, applicationController.updateappl);
+// router.post('/upddur/', authMiddleware, applicationController.updateDuration);
+// router.post('/updman/', authMiddleware, applicationController.updateManager);
+// router.post('/changedeloptn/', authMiddleware, applicationController.changeCheckupPlaceDeleteOption);
+// router.get('/applicationdel/:id', authMiddleware, applicationController.deleteApplication)
+applicationRouter(router);
 router.post("/upload", fileController.upload);
 router.post("/uploadrwf", fileController.uploadReviewFiles);
 router.get("/files/:user", fileController.getListFiles);

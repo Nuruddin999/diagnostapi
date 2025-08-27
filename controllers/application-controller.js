@@ -6,7 +6,8 @@ const {
     Comment,
     User,
     Smeta,
-    Smetaplan, ReworkComment, ReworkCommentFile
+    Smetaplan, ReworkComment, ReworkCommentFile,
+    AbroadInfo,
 } = require('../models');
 const {Op} = require('sequelize');
 
@@ -283,6 +284,27 @@ class ApplicationController {
             const {id} = req.params;
             await Application.destroy({where: {id}})
             return res.json({deleted: 'ok'});
+        } catch (e) {
+            next(e);
+        }
+    }
+    async createAbroad(req, res, next) {
+        try {
+            const applicationData = await AbroadInfo.create({
+                ...req.body,
+            });
+            return res.json(applicationData);
+        } catch (e) {
+            next(e);
+        }
+    }
+    async updateAbroad(req, res, next) {
+        const {applId, data} = req.body;
+        try {
+            const applicationData = await AbroadInfo.update({
+                ...data,
+            },{where: {applId}});
+            return res.json(applicationData);
         } catch (e) {
             next(e);
         }
