@@ -10,10 +10,9 @@ const isAllAbroadEmpty = (obj) => {
 
 
 const updateAbroad = async (id, obj) => {
-    console.log(id);
-    console.log(obj);
+
     const isEmpty = isAllAbroadEmpty(obj)
-    console.log(isEmpty)
+
     if (!isEmpty) {
         return await AbroadInfo.upsert({...obj, applId: id});
     }
