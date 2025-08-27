@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+        AbroadInfo.belongsTo(models.Application, {
+            foreignKey: 'applId',
+            onDelete: 'CASCADE'
+        })
     }
   }
   AbroadInfo.init({
@@ -27,7 +31,8 @@ module.exports = (sequelize, DataTypes) => {
     food: DataTypes.STRING,
     transportCosts: DataTypes.DECIMAL,
     peopleQty: DataTypes.INTEGER,
-    daysQty: DataTypes.INTEGER
+    daysQty: DataTypes.INTEGER,
+      applId:DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'AbroadInfo',

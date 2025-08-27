@@ -9,6 +9,7 @@ const applicationRouter=(router)=>{
         updateManager,
         updateDuration,
         updateAbroad,
+        createAbroad,
         getAll,
         getByLetter,
         getOne
@@ -22,6 +23,8 @@ const applicationRouter=(router)=>{
     router.post('/updman/', authMiddleware, updateManager);
     router.post('/changedeloptn/', authMiddleware, changeCheckupPlaceDeleteOption);
     router.get('/applicationdel/:id', authMiddleware, deleteApplication)
+    router.post('/crtabrd/', authMiddleware, createAbroad);
+    router.post('/updtabrd/', authMiddleware, updateAbroad);
 }
 
 module.exports = applicationRouter;

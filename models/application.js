@@ -31,6 +31,10 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: 'applicationId',
                 onDelete: 'cascade'
             })
+            Application.hasMany(models.AbroadInfo, {
+                foreignKey: 'applId',
+                onDelete: 'cascade'
+            })
         }
     }
 
