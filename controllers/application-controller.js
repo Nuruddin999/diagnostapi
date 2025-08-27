@@ -237,8 +237,8 @@ class ApplicationController {
                 await Smetaplan.create({...cDoctor, smetaId: smetaData.id});
             }
 
-           const res = await updateAbroad(id, abroadInfo)
-           console.log('res', res)
+            await updateAbroad(id, abroadInfo)
+
 
             return res.json(applicationsData);
         } catch (e) {
