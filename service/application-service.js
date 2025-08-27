@@ -1,11 +1,15 @@
 const {AbroadInfo} = require("../models");
 const isAllAbroadEmpty = (obj) => {
+    let isEmpty = true;
     for (const key in obj) {
         if (obj[key] !== "") {
-            return false;
+            isEmpty = false;
+        }
+        if (obj.date === "") {
+            obj.date = null
         }
     }
-    return true;
+    return isEmpty;
 }
 
 
@@ -13,6 +17,7 @@ const updateAbroad = async (id, obj) => {
 
     const isEmpty = isAllAbroadEmpty(obj)
 console.log(isEmpty)
+    console.log(obj)
     if (!isEmpty) {
         try {
             return await AbroadInfo.upsert({...obj, applId: id});
