@@ -134,13 +134,21 @@ class ApplicationController {
         try {
             const {fundName, fundRequest, manager, patientName, patientRequest, limit, page, creator} = req.query;
             const offset = page * limit - limit
+            const whereQuery = {}
+            if (fundRequest && fundRequest.trim() !== '') {
+                whereQuery['fundRequest'] = {[Op.iLike]: `%${fundRequest}%`};
+            }
+            if (patientRequest && patientRequest.trim() !== '') {
+                whereQuery.patientRequest = {[Op.iLike]: `%${patientRequest}%`};
+            }
+            if (fundName && fundName.trim() !== '') {
+                whereQuery.patientPromoter = {[Op.iLike]: `%${fundName}%`};
+            }
             const applicationsData = await Application.findAndCountAll({
                 where: {
                     ...(creator === 'all' ? {manager: {[Op.iLike]: `%${manager}%`}} : {managerId: creator}),
-                    fundRequest: {[Op.iLike]: `%${fundRequest}%`},
-                    fundName: {[Op.iLike]: `%${fundName}%`},
                     patientName: {[Op.iLike]: `%${patientName}%`},
-                    patientRequest: {[Op.iLike]: `%${patientRequest}%`},
+                    ...whereQuery,
                 },
                 limit, offset,
                 order: [
