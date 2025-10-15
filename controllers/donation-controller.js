@@ -1,4 +1,4 @@
-const {Donation, Application} = require("../models");
+const {Donation} = require("../models");
 
 class DonationController {
     async create(req, res, next) {
