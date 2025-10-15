@@ -2,9 +2,9 @@ const uploadFile = require("../middlewares/upload");
 const fs = require("fs");
 const baseUrl = "http://188.68.220.210/api/file/";
 const {User, ReworkCommentFile} = require('../models');
-const uploadFiles = async (req, res, modificator) => {
+const uploadFiles = async (req, res) => {
     try {
-        await uploadFile[modificator](req, res);
+        await uploadFile.uploadFileMiddleware(req, res);
 
         if (!req.file) {
             throw new Error("No file uploaded");
@@ -29,7 +29,7 @@ const uploadFiles = async (req, res, modificator) => {
 
 const upload = async (req, res) => {
     try {
-        const fileName = await uploadFiles(req, res, 'uploadFileMiddleware');
+        const fileName = await uploadFiles(req, res);
         const user = await User.findOne({where: {id: req.body.userid}})
         const fetchedName = fileName.originalName
         await user.update({urlSignPath: baseUrl + fetchedName, signFileName: fetchedName})
@@ -48,11 +48,13 @@ const upload = async (req, res) => {
 
 const uploadDonationFile = async (req, res) => {
     try {
-        const fileName = await uploadFiles(req, res, 'uploadFileDonation');
-        const fetchedName = fileName.originalName
-        res.status(200).send({
-            message: "Uploaded the file successfully: " + fetchedName,
-        });
+        await uploadFile.uploadFileDonation(req, res);
+
+        if (!req.file) {
+            throw new Error("No file uploaded");
+        }
+
+        res.status(200).send(req.file.originalname);
     } catch (err) {
         console.log(err);
         return res.status(500).send({
@@ -64,7 +66,7 @@ const uploadDonationFile = async (req, res) => {
 const uploadReviewFiles = async (req, res) => {
 
     try {
-        const fileName = await uploadFiles(req, res,'uploadFileMiddleware');
+        const fileName = await uploadFiles(req, res);
         const {reworkCommentId} = req.body;
         await ReworkCommentFile.create({url:fileName.originalName,reworkCommentId, type:fileName.mimeType})
         res.status(200).send({
@@ -156,5 +158,6 @@ module.exports = {
     download,
     remove,
     removeSync,
-    uploadReviewFiles
+    uploadReviewFiles,
+    uploadDonationFile
 };

@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser')
 const router = require('./router/index')
 const errorMiddleware = require('./middlewares/error-middleware');
 const PORT = process.env.PORT || 5000;
-const root = require('path').join(__dirname, 'build')
+const donationsStatic = require('path').join(__dirname, "uploads")
 const http = require('http');
 
 const app = express()
@@ -15,7 +15,7 @@ app.use(cors({
     credentials: true,
     origin: process.env.MODE ?  ['http://188.68.220.210:3000', 'http://188.68.220.210:12345','http://localhost:3000','http://localhost:3001','http://localhost:9000']:['http://188.68.220.210:3000', 'http://188.68.220.210:12345'],
 }));
-app.use(express.static(root))
+app.use("/uploads", express.static(donationsStatic));
 app.use('/', router);
 app.use(errorMiddleware);
 app.use(express.urlencoded({ extended: true }));

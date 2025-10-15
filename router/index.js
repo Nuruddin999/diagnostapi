@@ -5,6 +5,7 @@ const applicationRouter = require('./applicationRouter');
 const userRouter = require('./userRouter');
 const smetaRouter = require('./smetaRouter');
 const fileRouter = require('./fileRouter');
+const donationRouter = require('./donationRouter');
 const router = new Router();
 const authMiddleware = require('../middlewares/auth-middleware');
 
@@ -13,6 +14,7 @@ userRouter(router);
 applicationRouter(router);
 smetaRouter(router);
 fileRouter(router);
+donationRouter(router);
 router.post("/docspec", authMiddleware, specialityController.create);
 router.get("/docspecs", authMiddleware, specialityController.getAll);
 router.get('/docspecs/:id', authMiddleware, specialityController.deleteSpeciality)
