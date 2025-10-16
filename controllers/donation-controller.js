@@ -16,7 +16,7 @@ class DonationController {
             const {page, limit} = req.query;
             const offset = page * limit - limit
             const donationsData = await Donation.findAndCountAll({
-                limit, offset
+                limit, offset, ...(req.query.status ? {where: {status: req.query.status}} : {})
             });
             return res.json({
                 ...donationsData,
