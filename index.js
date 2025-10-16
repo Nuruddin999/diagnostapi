@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
     credentials: true,
-    origin: process.env.MODE ?  ['http://188.68.220.210:3000', 'http://188.68.220.210:12345','http://localhost:3000','http://localhost:3001','http://localhost:9000']:['http://188.68.220.210:3000', 'http://188.68.220.210:12345'],
+    origin: process.env.MODE ?  ['http://188.68.220.210:3000', 'http://188.68.220.210:12345','http://localhost:3000','http://localhost:3001','http://localhost:9000']:['http://188.68.220.210:3000', 'http://188.68.220.210:12345','http://188.68.220.210:8000'],
 }));
 app.use("/uploads", express.static(donationsStatic));
 app.use('/', router);
