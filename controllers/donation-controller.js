@@ -22,7 +22,7 @@ class DonationController {
                 ...donationsData,
                 rows: donationsData.rows.map(el => ({
                     ...el.toJSON(),
-                    image: `http://localhost:5001/uploads/donations/${el.image}`
+                    image: `http://188.68.220.210/api/uploads/donations/${el.image}`
                 }))
             });
         } catch (e) {
