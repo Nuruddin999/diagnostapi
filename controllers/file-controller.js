@@ -82,7 +82,11 @@ const uploadReviewFiles = async (req, res) => {
 };
 
 const getListFiles = async (req, res) => {
-    const user = await User.findOne({where: {id: req.params.user}})
+    const userId = Number(req.params.user)
+    if (!userId || isNaN(userId)) {
+        return res.status(400).json({ message: 'Invalid user id' })
+    }
+    const user = await User.findOne({where: {id: userId}})
     const directoryPath = "uploads/";
 
     fs.readdir(directoryPath, function (err, files) {
