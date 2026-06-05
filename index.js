@@ -17,6 +17,16 @@ app.use(cors({
 }));
 app.use("/uploads", express.static(donationsStatic));
 app.use('/', router);
+app.use((err, req, res, next) => {
+    if (err) {
+        console.error("====== ВСЕ-ТАКИ ПОЙМАЛИ ОШИБКУ ДО КОНТРОЛЛЕРА ======");
+        console.error("Имя ошибки (Name):", err.name);
+        console.error("Сообщение (Message):", err.message);
+        console.error("Статус ошибки (Status):", err.status || err.statusCode);
+        console.error("====================================================");
+    }
+    next(err); // передаем ошибку дальше в вашу стандартную мидлварь
+});
 app.use(errorMiddleware);
 app.use(express.urlencoded({ extended: true }));
 const server = http.createServer(app);
