@@ -185,6 +185,7 @@ class ApplicationController {
                 fundRequest,
                 abroadInfo
             } = req.body
+            console.log("checkupPlans",checkupPlans)
             const applicationsData = await Application.findOne({where: {id}});
             await applicationsData.update({
                 mostProblDiagnosis,
