@@ -239,10 +239,20 @@ class ApplicationController {
             }
 
             await CheckupPlan.destroy({where: {applicationId: id}});
-            for (const cDoctor of checkupPlans) {
-                const result = await CheckupPlan.create({...cDoctor});
-                await result.setApplication(applicationsData);
-                await Smetaplan.create({...cDoctor, smetaId: smetaData.id});
+            if (checkupPlans && checkupPlans.length > 0) {
+
+                const checkupPlansToInsert = checkupPlans.map(cDoctor => ({
+                    ...cDoctor,
+                    applicationId: applicationsData.id // связываем напрямую через поле внешнего ключа
+                }));
+
+                const smetaPlansToInsert = checkupPlans.map(cDoctor => ({
+                    ...cDoctor,
+                    smetaId: smetaData.id
+                }));
+
+                await CheckupPlan.bulkCreate(checkupPlansToInsert);
+                await Smetaplan.bulkCreate(smetaPlansToInsert);
             }
 
             await updateAbroad(id, abroadInfo)
