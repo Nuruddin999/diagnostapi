@@ -261,6 +261,7 @@ class ApplicationController {
             return res.json(applicationsData);
         } catch (e) {
             next(e);
+            console.log(e);
         }
     }
 
