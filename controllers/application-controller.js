@@ -9,7 +9,7 @@ const {
     Smetaplan, ReworkComment, ReworkCommentFile,
     AbroadInfo,
 } = require('../models');
-const updateAbroad = require('../service/application-service');
+// const updateAbroad = require('../service/application-service');
 const {Op} = require('sequelize');
 
 class ApplicationController {
@@ -163,6 +163,7 @@ class ApplicationController {
 
     async updateappl(req, res, next) {
         try {
+            console.log("start")
             const {
                 consiliumDoctors,
                 id,
@@ -255,7 +256,7 @@ class ApplicationController {
                 await Smetaplan.bulkCreate(smetaPlansToInsert);
             }
 
-            await updateAbroad(id, abroadInfo)
+            //await updateAbroad(id, abroadInfo)
 
 
             return res.json(applicationsData);
@@ -329,17 +330,17 @@ class ApplicationController {
         }
     }
 
-    async updateAbroad(req, res, next) {
-        const {applId, data} = req.body;
-        try {
-            const applicationData = await AbroadInfo.update({
-                ...data,
-            }, {where: {applId}});
-            return res.json(applicationData);
-        } catch (e) {
-            next(e);
-        }
-    }
+    // async updateAbroad(req, res, next) {
+    //     const {applId, data} = req.body;
+    //     try {
+    //         const applicationData = await AbroadInfo.update({
+    //             ...data,
+    //         }, {where: {applId}});
+    //         return res.json(applicationData);
+    //     } catch (e) {
+    //         next(e);
+    //     }
+    // }
 }
 
 
