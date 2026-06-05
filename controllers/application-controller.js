@@ -242,15 +242,23 @@ class ApplicationController {
             await CheckupPlan.destroy({where: {applicationId: id}});
             if (checkupPlans && checkupPlans.length > 0) {
 
-                const checkupPlansToInsert = checkupPlans.map(cDoctor => ({
-                    ...cDoctor,
-                    applicationId: applicationsData.id // связываем напрямую через поле внешнего ключа
-                }));
+                // 3. Готовим массив для CheckupPlan (вырезаем id)
+                const checkupPlansToInsert = checkupPlans.map(cDoctor => {
+                    const { id, ...rest } = cDoctor;
+                    return {
+                        ...rest,
+                        applicationId: applicationsData.id
+                    };
+                });
 
-                const smetaPlansToInsert = checkupPlans.map(cDoctor => ({
-                    ...cDoctor,
-                    smetaId: smetaData.id
-                }));
+                const smetaPlansToInsert = checkupPlans.map(cDoctor => {
+                    // Точно так же убираем старый ID, чтобы база сама сделала автоинкремент
+                    const { id, ...rest } = cDoctor;
+                    return {
+                        ...rest,
+                        smetaId: smetaData.id
+                    };
+                });
 
                 await CheckupPlan.bulkCreate(checkupPlansToInsert);
                 await Smetaplan.bulkCreate(smetaPlansToInsert);
