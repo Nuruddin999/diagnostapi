@@ -9,7 +9,8 @@ const donationsStatic = require('path').join(__dirname, "uploads")
 const http = require('http');
 
 const app = express()
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));        // ← добавь лимит
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cookieParser());
 app.use(cors({
     credentials: true,
@@ -28,7 +29,6 @@ app.use((err, req, res, next) => {
     next(err); // передаем ошибку дальше в вашу стандартную мидлварь
 });
 app.use(errorMiddleware);
-app.use(express.urlencoded({ extended: true }));
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
